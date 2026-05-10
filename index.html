@@ -91,7 +91,7 @@
                 if (window.firebaseInitialized && window.db) {
                   clearInterval(checkInterval);
                   try {
-                    const fetchPromise = window.firebaseGetDocs(window.firebaseCollection(window.db, "auto"));
+                    const fetchPromise = window.firebaseGetDocs(window.firebaseCollection(window.db, "veicoli_broker"));
                     const timeoutPromise = new Promise((_, reject) => {
                         setTimeout(() => reject(new Error("Timeout Ambiente Protetto")), 4000);
                     });
