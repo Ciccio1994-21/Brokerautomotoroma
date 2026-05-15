@@ -177,8 +177,8 @@
                 <div className="relative z-10 max-w-[1440px] mx-auto h-full flex flex-col">
                   <div className="flex h-[90px]">
                     <div className="w-[35%] flex items-center pl-10 cursor-pointer" onClick={() => navigate('Home')}>
-                      {/* LOGO AGGIORNATO */}
-                      <img src="Logo.png" alt="Logo Bongi Sport Car" className="h-[55px] w-auto object-contain drop-shadow-sm rounded-lg" />
+                      {/* LOGO AGGIORNATO (Ingrandito) */}
+                      <img src="Logo.png" alt="Logo Bongi Sport Car" className="h-[75px] w-auto object-contain drop-shadow-md rounded-xl" />
                     </div>
                     <div className="w-[65%] flex items-center justify-end gap-8 pr-10">
                        <div className="flex items-center gap-3">
@@ -215,7 +215,7 @@
               {/* HEADER MOBILE */}
               <header className="lg:hidden bg-white text-black p-4 flex justify-between items-center sticky top-0 z-50 border-b-4 border-[#007A33] shadow-sm">
                 <div className="flex items-center cursor-pointer" onClick={() => navigate('Home')}>
-                    <img src="Logo.png" alt="Logo Bongi Sport Car" className="h-[40px] w-auto object-contain rounded-md" />
+                    <img src="Logo.png" alt="Logo Bongi Sport Car" className="h-[55px] w-auto object-contain rounded-xl" />
                 </div>
                 <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
                   {isMobileMenuOpen ? <i className="fa-solid fa-xmark text-[30px] text-[#007A33]"></i> : <i className="fa-solid fa-bars text-[30px] text-gray-800"></i>}
@@ -759,9 +759,9 @@
                 <div className="max-w-[1400px] mx-auto px-10">
                   <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16 border-b border-white/10 pb-16">
                     <div className="col-span-1 md:col-span-2 pr-8">
-                      {/* LOGO FOOTER AGGIORNATO */}
-                      <div className="flex items-center mb-6 cursor-pointer bg-white p-3 rounded-xl inline-block" onClick={() => navigate('Home')}>
-                          <img src="Logo.png" alt="Bongi Sport Car" className="h-[40px] w-auto object-contain rounded-md" />
+                      {/* LOGO FOOTER AGGIORNATO (senza sfondo bianco e più grande) */}
+                      <div className="flex items-center mb-6 cursor-pointer w-max" onClick={() => navigate('Home')}>
+                          <img src="Logo.png" alt="Bongi Sport Car" className="h-[90px] w-auto object-contain rounded-2xl" />
                       </div>
                       <p className="text-gray-400 text-sm leading-relaxed mb-6">Concessionario Auto e Moto. Esperti nel settore Nuovo, Usato e Km0 con anni di esperienza anche nel settore edile e del movimento terra.</p>
                       
