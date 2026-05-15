@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Broker Auto&Moto Roma - Di Fabrizio Di Vincenzo</title>
+    <title>Bongi Sport Car - Di Filippo Bongi</title>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -47,7 +47,7 @@
         }
     </script>
     <style>
-        /* Font primario standard simile a Opel Sans / Myriad Pro */
+        /* Font primario standard */
         body {
             font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
         }
@@ -61,9 +61,12 @@
 
         const CONFIG = {
             linkGoogleFormValutazione: "https://docs.google.com/forms/d/e/1FAIpQLSeYtcqgrOejvWqClIlEUneC2LPtTNzf67413H_mxFtcnGdnbw/viewform?embedded=true",
-            telefono: "+393755298383",
-            telefonoDisplay: "375 529 8383",
-            indirizzo: "Via Nettunense 78 - 00047 Marino (RM)"
+            telefono: "+393335330999",
+            telefonoDisplay: "333 533 0999",
+            indirizzo: "Via Vittorio Veneto, 32, 91011 Alcamo (TP)",
+            email: "bongisportcar@libero.it",
+            facebook: "https://www.facebook.com/share/1ERsqUTEjq/?mibextid=wwXIfr",
+            instagram: "https://www.instagram.com/bongisportcar_/"
         };
 
         const App = () => {
@@ -151,11 +154,17 @@
 
           const filteredCars = inventoryFilter === 'Tutti' 
             ? carsData 
-            : carsData.filter(car => car.category === inventoryFilter);
+            : carsData.filter(car => {
+                const condition = (car.condition || car.status || '').toLowerCase();
+                const category = (car.category || '').toLowerCase();
+                const filter = inventoryFilter.toLowerCase();
+                
+                return category === filter || condition.includes(filter);
+            });
 
           const whatsappMessage = selectedCar 
-            ? encodeURIComponent(`Salve Fabrizio, vorrei avere maggiori informazioni su ${selectedCar.brand} ${selectedCar.model} vista sul sito Broker Auto&Moto Roma.`) 
-            : 'Salve Fabrizio, vorrei avere maggiori informazioni sui vostri servizi di intermediazione.';
+            ? encodeURIComponent(`Salve Filippo, vorrei avere maggiori informazioni su ${selectedCar.brand} ${selectedCar.model} vista sul sito Bongi Sport Car.`) 
+            : 'Salve Filippo, vorrei avere maggiori informazioni sui vostri veicoli e servizi.';
 
           return (
             <div className="min-h-screen bg-white text-slate-800 antialiased flex flex-col">
@@ -169,20 +178,20 @@
                   <div className="flex h-[90px]">
                     <div className="w-[35%] flex items-center pl-10 cursor-pointer" onClick={() => navigate('Home')}>
                       {/* LOGO */}
-                      <img src="Logo.png" alt="Logo Broker Auto&Moto" className="h-[55px] w-auto object-contain drop-shadow-sm" />
+                      <img src="Logo.png" alt="Logo Bongi Sport Car" className="h-[55px] w-auto object-contain drop-shadow-sm" />
                     </div>
                     <div className="w-[65%] flex items-center justify-end gap-8 pr-10">
                        <div className="flex items-center gap-3">
                          <div className="bg-[#007A33]/10 p-2 rounded-full w-8 h-8 flex items-center justify-center"><i className="fa-solid fa-location-dot text-[#007A33]"></i></div>
-                         <div className="flex flex-col"><span className="text-[10px] font-bold text-gray-400 uppercase">Sede:</span><span className="text-[12px] font-bold text-gray-800">Marino (RM)</span></div>
+                         <div className="flex flex-col"><span className="text-[10px] font-bold text-gray-400 uppercase">Sede:</span><span className="text-[12px] font-bold text-gray-800">Alcamo (TP)</span></div>
                        </div>
                        <div className="flex items-center gap-3">
                          <div className="bg-[#007A33]/10 p-2 rounded-full w-8 h-8 flex items-center justify-center"><i className="fa-solid fa-phone text-[#007A33]"></i></div>
                          <div className="flex flex-col"><span className="text-[10px] font-bold text-gray-400 uppercase">Chiamaci:</span><span className="text-[13px] font-bold text-gray-800">{CONFIG.telefonoDisplay}</span></div>
                        </div>
                        <div className="flex items-center gap-3">
-                         <div className="bg-[#007A33]/10 p-2 rounded-full w-8 h-8 flex items-center justify-center"><i className="fa-brands fa-facebook text-[#007A33]"></i></div>
-                         <div className="flex flex-col"><span className="text-[10px] font-bold text-gray-400 uppercase">Social:</span><a href="https://www.facebook.com/p/Broker-automoto-Roma-100089381453925/" target="_blank" rel="noreferrer" className="text-[13px] font-bold text-gray-800 hover:text-[#007A33]">Visita la Pagina</a></div>
+                         <div className="bg-[#007A33]/10 p-2 rounded-full w-8 h-8 flex items-center justify-center"><i className="fa-brands fa-instagram text-[#007A33]"></i></div>
+                         <div className="flex flex-col"><span className="text-[10px] font-bold text-gray-400 uppercase">Social:</span><a href={CONFIG.instagram} target="_blank" rel="noreferrer" className="text-[13px] font-bold text-gray-800 hover:text-[#007A33]">Visita la Pagina</a></div>
                        </div>
                     </div>
                   </div>
@@ -206,7 +215,7 @@
               {/* HEADER MOBILE */}
               <header className="lg:hidden bg-white text-black p-4 flex justify-between items-center sticky top-0 z-50 border-b-4 border-[#007A33] shadow-sm">
                 <div className="flex items-center cursor-pointer" onClick={() => navigate('Home')}>
-                    <img src="Logo.png" alt="Logo Broker Auto&Moto" className="h-[40px] w-auto object-contain" />
+                    <img src="Logo.png" alt="Logo Bongi Sport Car" className="h-[40px] w-auto object-contain" />
                 </div>
                 <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
                   {isMobileMenuOpen ? <i className="fa-solid fa-xmark text-[30px] text-[#007A33]"></i> : <i className="fa-solid fa-bars text-[30px] text-gray-800"></i>}
@@ -249,11 +258,11 @@
                             
                             {/* Livello Contenuto */}
                             <div className="relative z-20 px-6 max-w-5xl mx-auto">
-                              <h2 className="text-5xl md:text-7xl font-black text-white mb-2 uppercase tracking-wider leading-tight">BROKER <span className="text-[#007A33]">AUTO&MOTO</span></h2>
-                              <h3 className="text-xl md:text-3xl font-bold text-gray-300 mb-6 uppercase tracking-widest">Agenzia di Vendita tra Privati</h3>
-                              <div className="flex items-center justify-center gap-5 my-8"><div className="h-px w-24 bg-[#007A33]/50"></div><i className="fa-solid fa-handshake text-[30px] text-[#007A33]"></i><div className="h-px w-24 bg-[#007A33]/50"></div></div>
+                              <h2 className="text-5xl md:text-7xl font-black text-white mb-2 uppercase tracking-wider leading-tight">BONGI <span className="text-[#007A33]">SPORT CAR</span></h2>
+                              <h3 className="text-xl md:text-3xl font-bold text-gray-300 mb-6 uppercase tracking-widest">Concessionario Auto e Moto</h3>
+                              <div className="flex items-center justify-center gap-5 my-8"><div className="h-px w-24 bg-[#007A33]/50"></div><i className="fa-solid fa-car text-[30px] text-[#007A33]"></i><div className="h-px w-24 bg-[#007A33]/50"></div></div>
                               <p className="text-white text-lg md:text-xl font-light mb-12 max-w-3xl mx-auto leading-relaxed opacity-90">
-                                Da oltre 30 anni nel mondo dei motori con Fabrizio Di Vincenzo. Trasformiamo la nostra passione e l'esperienza da meccanici nella tua sicurezza per l'acquisto e la vendita di auto e moto.
+                                La passione per i motori dal 2017 con Filippo Bongi. Un'ampia selezione di veicoli nuovi, usati e a Km0. Affidabilità, competenza e garanzia al tuo servizio.
                               </p>
                               <button onClick={() => navigate('Inventario')} className="bg-[#007A33] text-white px-12 py-4 rounded-full font-black uppercase tracking-widest hover:bg-black transition-all shadow-lg border-2 border-[#007A33]">SCOPRI I VEICOLI</button>
                             </div>
@@ -261,34 +270,27 @@
 
                           <section className="py-24 bg-gray-50">
                             <div className="max-w-[1400px] mx-auto px-6">
-                              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 text-center">
+                              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
                                 {/* SERVIZIO 1 */}
                                 <div className="flex flex-col items-center group bg-white p-10 rounded-3xl shadow-sm hover:shadow-xl transition-all border-b-4 border-transparent hover:border-[#007A33]">
-                                  <div className="w-24 h-24 rounded-full bg-[#007A33] flex items-center justify-center mb-8"><i className="fa-solid fa-users text-[38px] text-white"></i></div>
-                                  <h3 className="text-xl font-black text-black mb-2 uppercase tracking-tighter">Vendita tra Privati</h3>
-                                  <span className="text-[10px] bg-gray-100 text-[#007A33] px-3 py-1 rounded-full font-bold uppercase tracking-widest mb-4">Intermediazione</span>
-                                  <p className="text-gray-500 text-sm leading-relaxed">Gestiamo la compravendita tra privati al posto tuo: troviamo l'acquirente, gestiamo le pratiche e garantiamo la massima sicurezza.</p>
+                                  <div className="w-24 h-24 rounded-full bg-[#007A33] flex items-center justify-center mb-8"><i className="fa-solid fa-car-side text-[38px] text-white"></i></div>
+                                  <h3 className="text-xl font-black text-black mb-2 uppercase tracking-tighter">Concessionaria</h3>
+                                  <span className="text-[10px] bg-gray-100 text-[#007A33] px-3 py-1 rounded-full font-bold uppercase tracking-widest mb-4">Auto e Moto</span>
+                                  <p className="text-gray-500 text-sm leading-relaxed">Trattiamo la vendita di automobili e motocicli offrendoti un servizio completo, dalla consulenza fino alla messa su strada del tuo veicolo.</p>
                                 </div>
                                 {/* SERVIZIO 2 */}
-                                <div className="flex flex-col items-center group bg-[#007A33] p-10 rounded-3xl shadow-xl transition-all transform lg:scale-105 z-10">
-                                  <div className="w-24 h-24 rounded-full bg-white flex items-center justify-center mb-8"><i className="fa-solid fa-motorcycle text-[38px] text-[#007A33]"></i></div>
-                                  <h3 className="text-xl font-black text-white mb-2 uppercase tracking-tighter">Auto & Moto</h3>
-                                  <span className="text-[10px] bg-black text-white px-3 py-1 rounded-full font-bold uppercase tracking-widest mb-4">Tutti i veicoli</span>
-                                  <p className="text-gray-100 text-sm leading-relaxed">Che sia la tua prima utilitaria, una moto sportiva o un veicolo commerciale (abbiamo esperienza anche coi camion!), ti assistiamo.</p>
+                                <div className="flex flex-col items-center group bg-[#007A33] p-10 rounded-3xl shadow-xl transition-all transform md:scale-105 z-10">
+                                  <div className="w-24 h-24 rounded-full bg-white flex items-center justify-center mb-8"><i className="fa-solid fa-tags text-[38px] text-[#007A33]"></i></div>
+                                  <h3 className="text-xl font-black text-white mb-2 uppercase tracking-tighter">Nuovo, Usato, Km0</h3>
+                                  <span className="text-[10px] bg-black text-white px-3 py-1 rounded-full font-bold uppercase tracking-widest mb-4">La tua scelta</span>
+                                  <p className="text-gray-100 text-sm leading-relaxed">Che tu stia cercando il risparmio di un buon usato garantito, l'occasione di un Km0 o il fascino del nuovo, abbiamo la soluzione giusta.</p>
                                 </div>
                                 {/* SERVIZIO 3 */}
                                 <div className="flex flex-col items-center group bg-white p-10 rounded-3xl shadow-sm hover:shadow-xl transition-all border-b-4 border-transparent hover:border-[#007A33]">
-                                  <div className="w-24 h-24 rounded-full bg-black flex items-center justify-center mb-8"><i className="fa-solid fa-magnifying-glass-chart text-[38px] text-[#007A33]"></i></div>
-                                  <h3 className="text-xl font-black text-black mb-2 uppercase tracking-tighter">Valutazione</h3>
-                                  <span className="text-[10px] bg-gray-100 text-gray-500 px-3 py-1 rounded-full font-bold uppercase tracking-widest mb-4">30 Anni di Esperienza</span>
-                                  <p className="text-gray-500 text-sm leading-relaxed">Sfruttiamo l'esperienza da meccanici per offrirti consulenze tecniche, valutazioni reali di mercato e veicoli accuratamente periziati.</p>
-                                </div>
-                                {/* SERVIZIO 4 - NUOVO */}
-                                <div className="flex flex-col items-center group bg-white p-10 rounded-3xl shadow-sm hover:shadow-xl transition-all border-b-4 border-transparent hover:border-[#007A33]">
-                                  <div className="w-24 h-24 rounded-full bg-[#007A33] flex items-center justify-center mb-8"><i className="fa-solid fa-gavel text-[38px] text-white"></i></div>
-                                  <h3 className="text-xl font-black text-black mb-2 uppercase tracking-tighter">Aste Private</h3>
-                                  <span className="text-[10px] bg-gray-100 text-[#007A33] px-3 py-1 rounded-full font-bold uppercase tracking-widest mb-4">Prezzi Competitivi</span>
-                                  <p className="text-gray-500 text-sm leading-relaxed">Offriamo ai privati l'esclusiva opportunità di partecipare ad aste riservate ai commercianti, per acquistare a prezzi super vantaggiosi.</p>
+                                  <div className="w-24 h-24 rounded-full bg-black flex items-center justify-center mb-8"><i className="fa-solid fa-truck-moving text-[38px] text-[#007A33]"></i></div>
+                                  <h3 className="text-xl font-black text-black mb-2 uppercase tracking-tighter">Settore Edile</h3>
+                                  <span className="text-[10px] bg-gray-100 text-gray-500 px-3 py-1 rounded-full font-bold uppercase tracking-widest mb-4">Movimento Terra</span>
+                                  <p className="text-gray-500 text-sm leading-relaxed">In parallelo ai veicoli tradizionali, curiamo il settore edile offrendo mezzi e macchinari professionali per il movimento terra.</p>
                                 </div>
                               </div>
                             </div>
@@ -310,7 +312,7 @@
                               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                                 {carsData.slice(0, 3).map((car) => (
                                   <div key={car.id} onClick={() => navigate('Dettaglio', car)} className="bg-white rounded-2xl overflow-hidden shadow-lg group cursor-pointer transition-all duration-500 hover:-translate-y-2 border border-gray-100 relative">
-                                    <div className="absolute top-4 left-4 z-10">
+                                    <div className="absolute top-4 left-4 z-10 flex gap-2">
                                         {car.status === 'Venduta' ? (
                                             <span className="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest shadow-md bg-red-600 text-white border border-red-500">
                                                 VENDUTA
@@ -318,6 +320,11 @@
                                         ) : (
                                             <span className="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest shadow-md bg-black text-white">
                                                 {car.category || 'Veicolo'}
+                                            </span>
+                                        )}
+                                        {car.condition && car.status !== 'Venduta' && (
+                                            <span className="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest shadow-md bg-[#007A33] text-white">
+                                                {car.condition}
                                             </span>
                                         )}
                                     </div>
@@ -372,11 +379,11 @@
                               <div className="flex items-center justify-center gap-4 mb-8"><div className="h-[2px] w-12 bg-[#007A33]"></div><i className="fa-solid fa-motorcycle text-[20px] text-[#007A33]"></i><div className="h-[2px] w-12 bg-[#007A33]"></div></div>
                               
                               <div className="flex flex-wrap justify-center gap-4 mb-12">
-                                  {['Tutti', 'Auto', 'Moto'].map(filter => (
+                                  {['Tutti', 'Auto', 'Moto', 'Usato', 'Nuovo', 'Km0'].map(filter => (
                                       <button 
                                         key={filter}
                                         onClick={() => setInventoryFilter(filter)}
-                                        className={`px-8 py-3 rounded-full font-bold uppercase tracking-widest text-xs transition-all shadow-sm ${
+                                        className={`px-6 py-2 rounded-full font-bold uppercase tracking-widest text-xs transition-all shadow-sm ${
                                             inventoryFilter === filter 
                                             ? 'bg-[#007A33] text-white border-2 border-[#007A33]' 
                                             : 'bg-white text-gray-500 border-2 border-gray-200 hover:border-[#007A33] hover:text-[#007A33]'
@@ -391,7 +398,7 @@
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                                 {filteredCars.map((car) => (
                                   <div key={car.id} onClick={() => navigate('Dettaglio', car)} className="bg-white rounded-2xl overflow-hidden shadow-lg group cursor-pointer transition-all duration-500 hover:-translate-y-2 border border-gray-100 relative">
-                                    <div className="absolute top-4 left-4 z-10">
+                                    <div className="absolute top-4 left-4 z-10 flex gap-2">
                                         {car.status === 'Venduta' ? (
                                             <span className="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest shadow-md bg-red-600 text-white border border-red-500">
                                                 VENDUTA
@@ -399,6 +406,11 @@
                                         ) : (
                                             <span className="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest shadow-md bg-black text-white">
                                                 {car.category}
+                                            </span>
+                                        )}
+                                        {car.condition && car.status !== 'Venduta' && (
+                                            <span className="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest shadow-md bg-[#007A33] text-white">
+                                                {car.condition}
                                             </span>
                                         )}
                                     </div>
@@ -419,7 +431,7 @@
                                 ))}
                                 {filteredCars.length === 0 && (
                                     <div className="col-span-1 md:col-span-3 text-center py-20 text-gray-500">
-                                        Nessun veicolo trovato per questa categoria al momento.
+                                        Nessun veicolo trovato per questa selezione al momento.
                                     </div>
                                 )}
                             </div>
@@ -441,7 +453,7 @@
                                       {/* Immagini */}
                                       <div className="flex flex-col gap-4">
                                           <div className="w-full aspect-[4/3] rounded-2xl overflow-hidden shadow-md border border-gray-100 relative bg-gray-100">
-                                              <div className="absolute top-4 left-4 z-10">
+                                              <div className="absolute top-4 left-4 z-10 flex gap-2">
                                                   {selectedCar.status === 'Venduta' ? (
                                                       <span className="px-4 py-2 rounded-full text-xs font-black uppercase tracking-widest shadow-md bg-red-600 text-white border border-red-500">
                                                           VENDUTA
@@ -449,6 +461,11 @@
                                                   ) : (
                                                       <span className="px-4 py-2 rounded-full text-xs font-black uppercase tracking-widest shadow-md bg-black text-white">
                                                           {selectedCar.category}
+                                                      </span>
+                                                  )}
+                                                  {selectedCar.condition && selectedCar.status !== 'Venduta' && (
+                                                      <span className="px-4 py-2 rounded-full text-xs font-black uppercase tracking-widest shadow-md bg-[#007A33] text-white">
+                                                          {selectedCar.condition}
                                                       </span>
                                                   )}
                                               </div>
@@ -519,6 +536,7 @@
                                       <div className="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-6">
                                           {[
                                               { label: "Categoria", value: selectedCar.category || '-' },
+                                              { label: "Condizione", value: selectedCar.condition || '-' },
                                               { label: "Marca", value: selectedCar.brand || '-' },
                                               { label: "Modello", value: selectedCar.model || '-' },
                                               { label: "Anno", value: selectedCar.year || '-' },
@@ -551,7 +569,7 @@
                                   <div className="h-[2px] w-12 bg-[#007A33]"></div>
                           </div>
                           <p className="text-center text-slate-500 font-medium mb-12 text-sm max-w-2xl mx-auto">
-                              Affidati alla nostra agenzia per vendere la tua auto o moto. Compila il modulo per una valutazione professionale, ci occuperemo noi di tutto l'iter burocratico e della ricerca dell'acquirente.
+                              Affidati alla nostra concessionaria per vendere la tua auto o moto. Compila il modulo per una valutazione professionale, ci occuperemo noi di tutto l'iter burocratico e della ricerca dell'acquirente.
                           </p>
                           <div className="bg-white p-4 md:p-8 rounded-[2rem] shadow-xl border border-slate-200 flex justify-center w-full h-[900px]">
                               <iframe 
@@ -579,7 +597,7 @@
                                       <i className="fa-solid fa-flag-checkered text-[24px] text-white"></i>
                                       <div className="h-[2px] w-16 bg-white/30"></div>
                                   </div>
-                                  <p className="text-white/90 text-xl font-medium italic">"Dai ricambi alle piste, fino all'intermediazione. Una vita dedicata ai motori."</p>
+                                  <p className="text-white/90 text-xl font-medium italic">"Dal mondo delle moto alle auto e al settore edile. Una passione in costante crescita."</p>
                               </div>
                           </div>
 
@@ -594,37 +612,37 @@
                                       />
                                       <div className="absolute -bottom-6 -right-6 bg-white border-2 border-[#007A33] text-black p-6 rounded-2xl shadow-xl hidden md:block z-20">
                                           <div className="text-3xl font-black text-[#007A33]"><i className="fa-solid fa-award"></i></div>
-                                          <div className="text-[12px] font-black uppercase tracking-widest mt-2">Dal 1992<br/>nel settore</div>
+                                          <div className="text-[12px] font-black uppercase tracking-widest mt-2">Dal 2017<br/>nel settore</div>
                                       </div>
                                   </div>
                                   <div className="flex flex-col gap-6">
-                                      <span className="text-[#007A33] font-black uppercase tracking-[0.2em] text-xs">Fabrizio Di Vincenzo</span>
-                                      <h2 className="text-4xl font-black uppercase text-black tracking-tighter">Una passione per i motori lunga una vita</h2>
+                                      <span className="text-[#007A33] font-black uppercase tracking-[0.2em] text-xs">Filippo Bongi</span>
+                                      <h2 className="text-4xl font-black uppercase text-black tracking-tighter">La passione che guida ogni nostro progetto</h2>
                                       
                                       <div className="space-y-4 text-gray-600 leading-relaxed text-sm">
                                           <p>
-                                              Il mio viaggio nel mondo dei motori è iniziato da giovanissimo. Era il <strong>1992</strong> quando ho affrontato il mio primo vero lavoro dentro un negozio di autoricambi, come ricambista. Da lì, il richiamo della meccanica è stato forte, portandomi a lavorare sporcandomi le mani come meccanico.
+                                              Tutto è iniziato nel <strong>2017</strong>, spinto da una profonda e radicata passione per il mondo delle due ruote. Inizialmente concentrato sulle moto, il commercio e le continue opportunità mi hanno permesso di espandere i miei orizzonti portandomi, quasi naturalmente, alla vendita di auto.
                                           </p>
                                           <p>
-                                              Ma non mi sono fermato solo alle officine. Nel corso degli anni ho fatto anche il trasportatore, arrivando persino a vendere camion in diverse occasioni. La vendita, in realtà, è sempre stata una costante: per pura passione, ho sempre venduto auto da privato. I motori non sono stati solo lavoro, ma anche sport e adrenalina: ho corso in pista a livello regionale, vivendo la competizione in prima persona.
+                                              La voglia di crescere non si è mai fermata. Negli anni ho deciso di mettere in parallelo alla concessionaria anche il <strong>settore edile</strong>, di cui mi occupo direttamente. Questa sinergia mi ha spinto a trattare e curare anche mezzi specifici, come quelli per il <strong>movimento terra</strong>, offrendo un servizio completo per chi cerca mezzi da lavoro.
                                           </p>
                                           <p>
-                                              Tre anni fa, l'esperienza accumulata mi ha spinto ad aprire un'agenzia di intermediazione auto insieme ad altri soci. Il successo e i risultati ottenuti mi hanno dato la spinta definitiva: ho deciso di mettermi in proprio fondando <strong>Broker Auto&Moto Roma</strong>.
+                                              Oggi <strong>Bongi Sport Car</strong> è la tua concessionaria di fiducia: che si tratti di un veicolo Usato, del fascino del Nuovo o del vantaggio del Km0, il nostro obiettivo è garantire professionalità e i mezzi giusti per ogni tua esigenza, stradale o lavorativa.
                                           </p>
                                       </div>
                                       
                                       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
                                           <div className="p-4 bg-gray-50 rounded-xl border border-gray-100 text-center">
-                                              <i className="fa-solid fa-wrench text-[#007A33] mb-3 text-[24px]"></i>
-                                              <h4 className="font-bold text-black uppercase text-[11px] tracking-widest">Esperienza Tecnica</h4>
+                                              <i className="fa-solid fa-motorcycle text-[#007A33] mb-3 text-[24px]"></i>
+                                              <h4 className="font-bold text-black uppercase text-[11px] tracking-widest">Auto e Moto</h4>
                                           </div>
                                           <div className="p-4 bg-gray-50 rounded-xl border border-gray-100 text-center">
-                                              <i className="fa-solid fa-flag-checkered text-[#007A33] mb-3 text-[24px]"></i>
-                                              <h4 className="font-bold text-black uppercase text-[11px] tracking-widest">Ex Pilota</h4>
+                                              <i className="fa-solid fa-tags text-[#007A33] mb-3 text-[24px]"></i>
+                                              <h4 className="font-bold text-black uppercase text-[11px] tracking-widest">Nuovo e Usato</h4>
                                           </div>
                                           <div className="p-4 bg-gray-50 rounded-xl border border-gray-100 text-center">
-                                              <i className="fa-solid fa-truck-fast text-[#007A33] mb-3 text-[24px]"></i>
-                                              <h4 className="font-bold text-black uppercase text-[11px] tracking-widest">Auto, Moto e Camion</h4>
+                                              <i className="fa-solid fa-truck-moving text-[#007A33] mb-3 text-[24px]"></i>
+                                              <h4 className="font-bold text-black uppercase text-[11px] tracking-widest">Movimento Terra</h4>
                                           </div>
                                       </div>
                                   </div>
@@ -650,18 +668,18 @@
                               <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
                                   <div className="flex flex-col gap-6">
                                       
-                                      <div className="bg-white rounded-2xl p-8 border border-gray-200 flex items-start gap-6 shadow-sm hover:shadow-md transition-shadow">
+                                      <div className="bg-white rounded-2xl p-6 border border-gray-200 flex items-start gap-6 shadow-sm hover:shadow-md transition-shadow">
                                           <div className="w-14 h-14 bg-gray-50 text-[#007A33] rounded-xl flex items-center justify-center shrink-0 border border-gray-100">
                                               <i className="fa-solid fa-location-dot text-[24px]"></i>
                                           </div>
                                           <div>
                                               <h3 className="text-lg font-black uppercase text-black tracking-tighter mb-2">La Nostra Sede</h3>
-                                              <p className="text-gray-500 text-sm mb-2">Vieni a trovarci o fissa un appuntamento per una valutazione.</p>
-                                              <span className="text-black font-bold">{CONFIG.indirizzo}</span>
+                                              <p className="text-gray-500 text-sm mb-2">Vieni a trovarci presso il nostro showroom.</p>
+                                              <span className="text-black font-bold text-sm">{CONFIG.indirizzo}</span>
                                           </div>
                                       </div>
 
-                                      <div className="bg-white rounded-2xl p-8 border border-gray-200 flex items-start gap-6 shadow-sm hover:shadow-md transition-shadow">
+                                      <div className="bg-white rounded-2xl p-6 border border-gray-200 flex items-start gap-6 shadow-sm hover:shadow-md transition-shadow">
                                           <div className="w-14 h-14 bg-gray-50 text-[#007A33] rounded-xl flex items-center justify-center shrink-0 border border-gray-100">
                                               <i className="fa-solid fa-phone text-[24px]"></i>
                                           </div>
@@ -674,7 +692,20 @@
                                           </div>
                                       </div>
 
-                                      <div className="bg-white rounded-2xl p-8 border border-gray-200 flex items-start gap-6 shadow-sm hover:shadow-md transition-shadow">
+                                      <div className="bg-white rounded-2xl p-6 border border-gray-200 flex items-start gap-6 shadow-sm hover:shadow-md transition-shadow">
+                                          <div className="w-14 h-14 bg-gray-50 text-[#007A33] rounded-xl flex items-center justify-center shrink-0 border border-gray-100">
+                                              <i className="fa-solid fa-envelope text-[24px]"></i>
+                                          </div>
+                                          <div>
+                                              <h3 className="text-lg font-black uppercase text-black tracking-tighter mb-2">Scrivici un'Email</h3>
+                                              <p className="text-gray-500 text-sm mb-2">Per richieste, preventivi o collaborazioni.</p>
+                                              <a href={`mailto:${CONFIG.email}`} className="text-[#007A33] font-bold text-sm hover:text-black transition-colors">
+                                                  {CONFIG.email}
+                                              </a>
+                                          </div>
+                                      </div>
+
+                                      <div className="bg-white rounded-2xl p-6 border border-gray-200 flex items-start gap-6 shadow-sm hover:shadow-md transition-shadow">
                                           <div className="w-14 h-14 bg-gray-50 text-[#007A33] rounded-xl flex items-center justify-center shrink-0 border border-gray-100">
                                               <i className="fa-solid fa-hashtag text-[24px]"></i>
                                           </div>
@@ -682,10 +713,10 @@
                                               <h3 className="text-lg font-black uppercase text-black tracking-tighter mb-2">Seguici sui Social</h3>
                                               <p className="text-gray-500 text-sm mb-3">Rimani aggiornato sui nuovi veicoli disponibili.</p>
                                               <div className="flex gap-4">
-                                                  <a href="https://www.facebook.com/p/Broker-automoto-Roma-100089381453925/" target="_blank" rel="noreferrer" className="flex items-center gap-2 bg-[#1877F2] text-white px-4 py-2 rounded-lg text-xs font-bold hover:bg-black transition-colors">
+                                                  <a href={CONFIG.facebook} target="_blank" rel="noreferrer" className="flex items-center gap-2 bg-[#1877F2] text-white px-4 py-2 rounded-lg text-xs font-bold hover:bg-black transition-colors">
                                                       <i className="fa-brands fa-facebook"></i> Facebook
                                                   </a>
-                                                  <a href="https://www.instagram.com/fabrizio.divincenzo76/" target="_blank" rel="noreferrer" className="flex items-center gap-2 bg-gradient-to-r from-[#833AB4] via-[#FD1D1D] to-[#F56040] text-white px-4 py-2 rounded-lg text-xs font-bold hover:opacity-80 transition-opacity">
+                                                  <a href={CONFIG.instagram} target="_blank" rel="noreferrer" className="flex items-center gap-2 bg-gradient-to-r from-[#833AB4] via-[#FD1D1D] to-[#F56040] text-white px-4 py-2 rounded-lg text-xs font-bold hover:opacity-80 transition-opacity">
                                                       <i className="fa-brands fa-instagram"></i> Instagram
                                                   </a>
                                               </div>
@@ -704,15 +735,15 @@
                                               </h3>
                                               
                                               <p className="text-white/90 leading-relaxed mb-8">
-                                                  Lavoriamo prevalentemente <strong>su appuntamento</strong> per poter dedicare il giusto tempo a te e al tuo veicolo. Che tu debba vendere, o stia cercando l'auto o la moto dei tuoi sogni, chiamaci per fissare un incontro presso la nostra sede di Marino.
+                                                  Siamo a tua completa disposizione per mostrarti il nostro parco auto, moto e i mezzi da lavoro. Chiamaci o scrivici per fissare un incontro presso la nostra sede di Alcamo.
                                               </p>
                                               
                                               <a 
-                                                href={`https://api.whatsapp.com/send?phone=${CONFIG.telefono.replace('+', '')}&text=Salve Fabrizio, vorrei fissare un appuntamento in agenzia.`} 
+                                                href={`https://api.whatsapp.com/send?phone=${CONFIG.telefono.replace('+', '')}&text=Salve Filippo, vorrei fissare un appuntamento in concessionaria.`} 
                                                 target="_blank" rel="noreferrer"
                                                 className="inline-flex bg-white text-[#007A33] px-8 py-4 rounded-xl font-black uppercase tracking-widest text-xs hover:bg-black hover:text-white transition-colors shadow-lg items-center gap-3"
                                               >
-                                                  <i className="fa-brands fa-whatsapp text-[18px]"></i> Scrivici ora
+                                                  <i className="fa-brands fa-whatsapp text-[18px]"></i> Scrivici su WhatsApp
                                               </a>
                                           </div>
                                       </div>
@@ -729,19 +760,16 @@
                   <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16 border-b border-white/10 pb-16">
                     <div className="col-span-1 md:col-span-2 pr-8">
                       <div className="flex items-center mb-6 cursor-pointer bg-white p-3 rounded-xl inline-block" onClick={() => navigate('Home')}>
-                          <img src="Logo.png" alt="Broker Auto&Moto" className="h-[40px] w-auto object-contain" />
+                          <img src="Logo.png" alt="Bongi Sport Car" className="h-[40px] w-auto object-contain" />
                       </div>
-                      <p className="text-gray-400 text-sm leading-relaxed mb-6">Agenzia di intermediazione per la vendita tra privati di auto e moto. Oltre 30 anni di esperienza nel settore motori a tua disposizione.</p>
+                      <p className="text-gray-400 text-sm leading-relaxed mb-6">Concessionario Auto e Moto. Esperti nel settore Nuovo, Usato e Km0 con anni di esperienza anche nel settore edile e del movimento terra.</p>
                       
                       <div className="flex gap-3">
-                          <a href="https://www.facebook.com/p/Broker-automoto-Roma-100089381453925/" target="_blank" rel="noreferrer" className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-[#007A33] transition-colors">
+                          <a href={CONFIG.facebook} target="_blank" rel="noreferrer" className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-[#007A33] transition-colors">
                               <i className="fa-brands fa-facebook-f text-white"></i>
                           </a>
-                          <a href="https://www.instagram.com/fabrizio.divincenzo76/" target="_blank" rel="noreferrer" className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-[#007A33] transition-colors">
+                          <a href={CONFIG.instagram} target="_blank" rel="noreferrer" className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-[#007A33] transition-colors">
                               <i className="fa-brands fa-instagram text-white"></i>
-                          </a>
-                          <a href="https://autosupermarket.it/concessionari/broker-auto-moto-roma?srsltid=AfmBOooHAg8WjeN7SKIoAFAaqfJISLY4qp1x8SDddqDRtBykH7bRoSdY" target="_blank" rel="noreferrer" className="px-4 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-[#007A33] transition-colors text-[10px] font-bold uppercase tracking-widest">
-                              Autosupermarket
                           </a>
                       </div>
                     </div>
@@ -764,11 +792,15 @@
                               <i className="fa-solid fa-phone text-[#007A33]"></i>
                               <span className="font-bold text-white">{CONFIG.telefonoDisplay}</span>
                           </p>
+                          <p className="flex items-center gap-3">
+                              <i className="fa-solid fa-envelope text-[#007A33]"></i>
+                              <span>{CONFIG.email}</span>
+                          </p>
                       </div>
                     </div>
                   </div>
                   <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-gray-500 text-[10px] font-bold uppercase tracking-[0.1em]">
-                      <span>© {new Date().getFullYear()} Broker Auto&Moto Roma di Fabrizio Di Vincenzo. Tutti i diritti riservati.</span>
+                      <span>© {new Date().getFullYear()} Bongi Sport Car di Filippo Bongi. Tutti i diritti riservati.</span>
                       <span>Realizzato con Passione</span>
                   </div>
                 </div>
