@@ -3,811 +3,928 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bongi Sport Car - Di Filippo Bongi</title>
+    <title>Bongi Sport Car | Concessionaria Auto e Moto</title>
     
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- FontAwesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- React & ReactDOM -->
     <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    
-    <!-- Babel -->
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics.js";
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
 
-        // Configurazione Firebase
-        const firebaseConfig = {
-            apiKey: "AIzaSyCB5yV6u4DtzUFb0jADUJobh8In52JNzp4",
-            authDomain: "maxcar-7416d.firebaseapp.com",
-            projectId: "maxcar-7416d",
-            storageBucket: "maxcar-7416d.firebasestorage.app",
-            messagingSenderId: "279232212865",
-            appId: "1:279232212865:web:33ab71b8fc8871e8bb4280",
-            measurementId: "G-QJWLPQNZQY"
-        };
-
-        try {
-            const app = initializeApp(firebaseConfig);
-            const analytics = getAnalytics(app);
-            window.db = getFirestore(app);
-            window.firebaseCollection = collection;
-            window.firebaseGetDocs = getDocs;
-            window.firebaseInitialized = true;
-            console.log("Firebase e Analytics inizializzati correttamente.");
-        } catch (error) {
-            console.error("Errore inizializzazione Firebase:", error);
-        }
-    </script>
     <style>
-        /* Font primario standard */
-        body {
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,700;0,900;1,900&family=Poppins:wght@400;600&display=swap');
+        
+        body { 
+            font-family: 'Poppins', sans-serif; 
+            background-color: #f8fafc; 
+            margin: 0; 
+            min-height: 100vh; 
         }
+        
+        h1, h2, h3, h4, h5, h6, .font-montserrat {
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        /* Nuovi colori estratti dal volantino: Arancione Corsa e Blu Navy Scuro */
+        .bg-bongi-orange { background-color: #FF5A00; }
+        .text-bongi-orange { color: #FF5A00; }
+        .border-bongi-orange { border-color: #FF5A00; }
+        
+        .bg-bongi-navy { background-color: #0F172A; }
+        .text-bongi-navy { color: #0F172A; }
+
+        .hero-slider {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            background-color: #000;
+        }
+        
+        .hero-slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 1.5s ease-in-out;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .hero-slide.active { opacity: 1; }
+
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(rgba(15, 23, 42, 0.6), rgba(0, 0, 0, 0.8));
+            z-index: 2;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 3;
+            width: 100%;
+            max-width: 64rem;
+        }
+
+        .ticker-wrapper {
+            overflow: hidden;
+            background: white;
+            padding: 2rem 0;
+            border-bottom: 1px solid #e2e8f0;
+            white-space: nowrap;
+            position: relative;
+            width: 100%;
+        }
+        .ticker-wrapper::before, .ticker-wrapper::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            width: 150px;
+            height: 100%;
+            z-index: 2;
+        }
+        .ticker-wrapper::before {
+            left: 0;
+            background: linear-gradient(to right, white, transparent);
+        }
+        .ticker-wrapper::after {
+            right: 0;
+            background: linear-gradient(to left, white, transparent);
+        }
+        .ticker-track {
+            display: inline-flex;
+            animation: ticker 25s linear infinite;
+        }
+        .slide {
+            width: 200px;
+            padding: 0 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .slide img {
+            max-width: 100%;
+            max-height: 60px;
+            object-fit: contain;
+            transition: all 0.3s ease;
+        }
+        .slide:hover img {
+            transform: scale(1.1);
+        }
+        @keyframes ticker {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        #loader {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            display: flex; justify-content: center; align-items: center;
+            background: white; z-index: 1000;
+            transition: opacity 0.5s ease;
+        }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #f1f1f1; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #FF5A00; }
     </style>
 </head>
-<body class="bg-white">
+<body>
+    <div id="loader">
+        <div class="flex flex-col items-center gap-4">
+            <div class="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-bongi-orange"></div>
+            <p class="text-xs font-bold uppercase tracking-widest text-slate-400 font-montserrat">Avviamento Motore...</p>
+        </div>
+    </div>
     <div id="root"></div>
 
     <script type="text/babel">
-        const { useState, useEffect } = React;
+        const { useState, useEffect, useMemo } = React;
 
         const CONFIG = {
-            linkGoogleFormValutazione: "https://docs.google.com/forms/d/e/1FAIpQLSeYtcqgrOejvWqClIlEUneC2LPtTNzf67413H_mxFtcnGdnbw/viewform?embedded=true",
-            telefono: "+393335330999",
-            telefonoDisplay: "333 533 0999",
-            indirizzo: "Via Vittorio Veneto, 32, 91011 Alcamo (TP)",
+            nomeConcessionaria: "Bongi Sport Car",
+            logoUrl: "Logo.png", 
+            citta: "Alcamo", 
+            provinciaBreve: "TP",
+            provinciaEstesa: "Provincia di Trapani",
+            cap: "91011",
+            
+            sottotitoloHero: "Concessionaria Auto e Moto: Nuovo, Usato e Km0. Specialisti anche nel settore edile e movimento terra.",
+            descrizioneFooter: "La tua concessionaria di fiducia ad Alcamo. Passione per i motori e competenza nel settore edile dal 2017.",
+            
+            indirizzo: "Via Vittorio Veneto, 32",
+            telefonoLink: "+393335330999", 
+            telefoni: [
+                { numero: "333 533 0999", nome: "Filippo", link: "+393335330999" }
+            ],
+            whatsappNumber: "393335330999", 
             email: "bongisportcar@libero.it",
-            facebook: "https://www.facebook.com/share/1ERsqUTEjq/?mibextid=wwXIfr",
-            instagram: "https://www.instagram.com/bongisportcar_/"
+            
+            social: {
+                instagram: "https://www.instagram.com/bongisportcar_/",
+                facebook: "https://www.facebook.com/share/1ERsqUTEjq/?mibextid=wwXIfr"
+            },
+            linkGoogleFormValutazione: "https://docs.google.com/forms/d/e/1FAIpQLSeYtcqgrOejvWqClIlEUneC2LPtTNzf67413H_mxFtcnGdnbw/viewform?embedded=true",
+            
+            chiSiamo: {
+                titoloOrigini: "La Nostra Storia dal 2017",
+                paragrafo1: "Tutto è iniziato nel 2017, spinto da una profonda e radicata passione per il mondo delle due ruote. Inizialmente concentrato sulle moto, il commercio e le continue opportunità mi hanno permesso di espandere i miei orizzonti portandomi, quasi naturalmente, alla vendita di auto.",
+                paragrafo2: "La voglia di crescere non si è mai fermata. Negli anni ho deciso di mettere in parallelo alla concessionaria anche il settore edile, di cui mi occupo direttamente. Questa sinergia mi ha spinto a trattare e curare anche mezzi specifici, come quelli per il movimento terra, offrendo un servizio completo per chi cerca mezzi da lavoro stradali o cantieristici.",
+                citazione: "Dal mondo delle moto alle auto e al settore edile. Una passione in costante crescita per offrirti sempre il mezzo giusto.",
+                nomeFondatore: "Filippo Bongi",
+                ruoloFondatore: "Titolare",
+                inizialeFondatore: "F"
+            },
+
+            firebase: {
+                apiKey: "AIzaSyCB5yV6u4DtzUFb0jADUJobh8In52JNzp4",
+                authDomain: "maxcar-7416d.firebaseapp.com",
+                projectId: "maxcar-7416d",
+                storageBucket: "maxcar-7416d.firebasestorage.app",
+                messagingSenderId: "279232212865",
+                appId: "1:279232212865:web:33ab71b8fc8871e8bb4280",
+                measurementId: "G-QJWLPQNZQY"
+            }
+        };
+
+        if (!firebase.apps.length) firebase.initializeApp(CONFIG.firebase);
+        const db = firebase.firestore();
+        const auth = firebase.auth();
+        const COLLECTION_PATH = `veicoli_broker`;
+
+        const IG_ICON = "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Instagram_icon.png/600px-Instagram_icon.png";
+        const FB_ICON = "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Facebook_logo_%28square%29.png/480px-Facebook_logo_%28square%29.png";
+
+        const MARCHI_AUTO = [
+            { id: 1, src: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f4/BMW_logo_%28gray%29.svg/512px-BMW_logo_%28gray%29.svg.png", alt: "BMW" },
+            { id: 2, src: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Mercedes-Logo.svg/512px-Mercedes-Logo.svg.png", alt: "Mercedes" },
+            { id: 3, src: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Audi_logo.svg/512px-Audi_logo.svg.png", alt: "Audi" },
+            { id: 4, src: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Volkswagen_logo_2019.svg/512px-Volkswagen_logo_2019.svg.png", alt: "VW" },
+            { id: 5, src: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Ducati_red_logo.svg/512px-Ducati_red_logo.svg.png", alt: "Ducati" }
+        ];
+
+        const HERO_IMAGES = [
+            "https://images.unsplash.com/photo-1560958089-b8a1929cea89?auto=format&fit=crop&q=80&w=1600",
+            "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&q=80&w=1600",
+            "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&q=80&w=1600"
+        ];
+
+        const HeroSlider = () => {
+            const [currentSlide, setCurrentSlide] = useState(0);
+
+            useEffect(() => {
+                const timer = setInterval(() => {
+                    setCurrentSlide((prev) => (prev + 1) % HERO_IMAGES.length);
+                }, 3000); 
+                return () => clearInterval(timer);
+            }, []);
+
+            return (
+                <div className="relative min-h-[85vh] flex items-center justify-center text-center px-4 overflow-hidden">
+                    <div className="hero-slider">
+                        {HERO_IMAGES.map((img, index) => (
+                            <div 
+                                key={index}
+                                className={`hero-slide ${index === currentSlide ? 'active' : ''}`}
+                                style={{ backgroundImage: `url('${img}')` }}
+                            ></div>
+                        ))}
+                        <div className="hero-overlay"></div>
+                    </div>
+                    <div className="hero-content animate-in fade-in slide-in-from-bottom-10 duration-1000">
+                        {CONFIG.logoUrl ? (
+                            <img src={CONFIG.logoUrl} alt={CONFIG.nomeConcessionaria} className="h-32 md:h-48 mx-auto mb-8 object-contain drop-shadow-2xl rounded-2xl" />
+                        ) : (
+                            <h1 className="text-6xl md:text-8xl font-black uppercase italic tracking-tighter mb-6 font-montserrat text-white">{CONFIG.nomeConcessionaria}</h1>
+                        )}
+                        <p className="text-xl md:text-2xl font-semibold mb-10 text-white drop-shadow-md">{CONFIG.sottotitoloHero}</p>
+                        <div className="flex flex-col md:flex-row gap-4 justify-center">
+                            <button onClick={() => window.scrollToPiazzale()} className="bg-bongi-orange hover:bg-[#CC4800] text-white px-12 py-5 rounded-full font-bold uppercase transition shadow-2xl hover:scale-105 transform tracking-widest text-sm">Esplora il Piazzale</button>
+                            <a href={`tel:${CONFIG.telefonoLink}`} className="bg-white hover:bg-gray-100 text-slate-900 px-12 py-5 rounded-full font-black uppercase transition shadow-2xl hover:scale-105 transform tracking-widest text-sm">Chiama Ora</a>
+                        </div>
+                    </div>
+                </div>
+            );
         };
 
         const App = () => {
-          const [currentPage, setCurrentPage] = useState('Home');
-          const [isLoading, setIsLoading] = useState(true);
-          const [carsData, setCarsData] = useState([]);
-          const [inventoryFilter, setInventoryFilter] = useState('Tutti');
-          const [selectedCar, setSelectedCar] = useState(null);
-          const [activeImageIndex, setActiveImageIndex] = useState(0);
-          const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-          const [heroImageIndex, setHeroImageIndex] = useState(0);
+            const [currentPage, setCurrentPage] = useState('home');
+            const [selectedCar, setSelectedCar] = useState(null);
+            const [autoList, setAutoList] = useState([]);
+            
+            const [filters, setFilters] = useState({
+                condizione: 'Tutte', categoria: 'Tutte', marca: 'Tutte', alimentazione: 'Tutte', prezzoMax: '', kmMax: '', annoMin: ''
+            });
+            
+            const [loading, setLoading] = useState(true);
+            const [activeImage, setActiveImage] = useState(null);
+            const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+            const [isFiltersOpen, setIsFiltersOpen] = useState(false);
 
-          const heroImages = [
-            "https://images.unsplash.com/photo-1560179707-f14e90ef3623?auto=format&fit=crop&q=80&w=1920",
-            "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&q=80&w=1920",
-            "https://images.unsplash.com/photo-1558981403-c5f9899a28bc?auto=format&fit=crop&q=80&w=1920"
-          ];
+            useEffect(() => {
+                document.title = `${CONFIG.nomeConcessionaria} | ${CONFIG.citta}`;
+                window.scrollToPiazzale = () => {
+                    setCurrentPage('piazzale');
+                    setSelectedCar(null);
+                };
+            }, []);
 
-          const menuItems = [
-            { id: 'Home', label: 'Home' },
-            { id: 'Inventario', label: 'Parco Veicoli' },
-            { id: 'vendi', label: 'Vendi Veicolo' },
-            { id: 'chi-siamo', label: 'La Nostra Storia' },
-            { id: 'Contatti', label: 'Contatti' }
-          ];
+            useEffect(() => {
+                const init = async () => {
+                    try {
+                        await auth.signInAnonymously();
+                        const unsubscribe = db.collection(COLLECTION_PATH)
+                            .onSnapshot(snapshot => {
+                                const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                                const mappedData = data.map(car => ({
+                                    ...car,
+                                    marca: car.brand || car.marca,
+                                    modello: car.model || car.modello,
+                                    prezzo: car.price ? String(car.price).replace(/[^0-9]/g, '') : (car.prezzo || 0),
+                                    anno: car.year || car.anno,
+                                    km: car.mileage ? String(car.mileage).replace(/[^0-9]/g, '') : (car.km || 0),
+                                    alimentazione: car.fuel || car.alimentazione,
+                                    cambio: car.transmission || car.cambio,
+                                    condizione: car.condition || car.condizione || 'Usato',
+                                    categoria: car.category || car.categoria || 'Auto',
+                                    immagine: (car.images && car.images[0]) ? car.images[0] : (car.immagine || "https://placehold.co/600x400?text=Nessuna+Foto"),
+                                    galleria: car.images || car.galleria || [],
+                                    descrizione: car.description || car.descrizione,
+                                    potenza: car.power ? String(car.power).replace(/[^0-9]/g, '') : car.potenza,
+                                    cilindrata: car.displacement ? String(car.displacement).replace(/[^0-9]/g, '') : car.cilindrata,
+                                    colore: car.color || car.colore
+                                }));
+                                setAutoList(mappedData);
+                                setLoading(false);
+                                const loader = document.getElementById('loader');
+                                if (loader) loader.style.opacity = '0';
+                                setTimeout(() => { if (loader) loader.style.display = 'none'; }, 500);
+                            }, (err) => {
+                                console.error("Errore database:", err);
+                                setLoading(false);
+                            });
+                        return () => unsubscribe();
+                    } catch (error) {
+                        console.error("Errore Auth:", error);
+                    }
+                };
+                init();
+            }, []);
 
-          useEffect(() => {
-            const fetchFromFirebase = async () => {
-              let attempts = 0;
-              const checkInterval = setInterval(async () => {
-                attempts++;
-                if (window.firebaseInitialized && window.db) {
-                  clearInterval(checkInterval);
-                  try {
-                    const fetchPromise = window.firebaseGetDocs(window.firebaseCollection(window.db, "veicoli_broker"));
-                    const timeoutPromise = new Promise((_, reject) => {
-                        setTimeout(() => reject(new Error("Timeout Ambiente Protetto")), 4000);
-                    });
+            useEffect(() => {
+                if (window.lucide) window.lucide.createIcons();
+            }, [currentPage, autoList, filters, selectedCar, isMobileMenuOpen, isFiltersOpen]);
 
-                    const querySnapshot = await Promise.race([fetchPromise, timeoutPromise]);
-                    
-                    const cars = [];
-                    querySnapshot.forEach((doc) => {
-                      cars.push({ id: doc.id, ...doc.data() });
-                    });
-                    
-                    // Imposta sempre le auto reali trovate nel DB, anche se vuoto
-                    setCarsData(cars);
-                    setIsLoading(false);
-                  } catch (e) {
-                    console.error("Errore nel recupero dati:", e);
-                    setCarsData([]);
-                    setIsLoading(false);
-                  }
-                } else if (attempts > 40) { 
-                  clearInterval(checkInterval);
-                  setCarsData([]);
-                  setIsLoading(false);
-                }
-              }, 100);
+            useEffect(() => {
+                window.scrollTo(0, 0);
+            }, [currentPage, selectedCar]);
+
+            const handleFilterChange = (e) => {
+                const { name, value } = e.target;
+                setFilters(prev => ({ ...prev, [name]: value }));
             };
 
-            fetchFromFirebase();
-          }, []);
+            const resetFilters = () => {
+                setFilters({ condizione: 'Tutte', categoria: 'Tutte', marca: 'Tutte', alimentazione: 'Tutte', prezzoMax: '', kmMax: '', annoMin: '' });
+            };
 
-          useEffect(() => {
-            let interval;
-            if (currentPage === 'Home') {
-                interval = setInterval(() => {
-                    setHeroImageIndex(prev => (prev + 1) % heroImages.length);
-                }, 3000);
-            }
-            return () => clearInterval(interval);
-          }, [currentPage, heroImages.length]);
+            const uniqueCondizioni = useMemo(() => ['Tutte', 'Usato', 'Nuovo', 'Km 0'], []);
+            const uniqueMarche = useMemo(() => ['Tutte', ...new Set(autoList.map(a => a.marca).filter(Boolean))], [autoList]);
+            const uniqueAlimentazioni = useMemo(() => ['Tutte', ...new Set(autoList.map(a => a.alimentazione).filter(Boolean))], [autoList]);
+            const uniqueCategorie = useMemo(() => ['Tutte', ...new Set(autoList.map(a => a.categoria).filter(Boolean))], [autoList]);
 
-          const navigate = (page, car = null) => {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-            setIsMobileMenuOpen(false);
-            if (car) {
-              setSelectedCar(car);
-              setActiveImageIndex(0);
-            }
-            setCurrentPage(page);
-          };
+            const filteredAutos = useMemo(() => {
+                return autoList.filter(a => {
+                    const condizioneAuto = a.condizione || 'Usato';
+                    if (filters.condizione !== 'Tutte' && condizioneAuto !== filters.condizione) return false;
+                    if (filters.categoria !== 'Tutte' && a.categoria !== filters.categoria) return false;
+                    if (filters.marca !== 'Tutte' && a.marca !== filters.marca) return false;
+                    if (filters.alimentazione !== 'Tutte' && a.alimentazione !== filters.alimentazione) return false;
+                    if (filters.prezzoMax && Number(a.prezzo) > Number(filters.prezzoMax)) return false;
+                    if (filters.kmMax && Number(a.km) > Number(filters.kmMax)) return false;
+                    if (filters.annoMin && Number(a.anno) < Number(filters.annoMin)) return false;
+                    return true;
+                });
+            }, [autoList, filters]);
 
-          const filteredCars = inventoryFilter === 'Tutti' 
-            ? carsData 
-            : carsData.filter(car => {
-                const condition = (car.condition || car.status || '').toLowerCase();
-                const category = (car.category || '').toLowerCase();
-                const filter = inventoryFilter.toLowerCase();
-                
-                return category === filter || condition.includes(filter);
-            });
+            const openCarDetails = (car) => {
+                setSelectedCar(car);
+                setActiveImage(car.immagine);
+                setCurrentPage('prodotto');
+            };
 
-          const whatsappMessage = selectedCar 
-            ? encodeURIComponent(`Salve Filippo, vorrei avere maggiori informazioni su ${selectedCar.brand} ${selectedCar.model} vista sul sito Bongi Sport Car.`) 
-            : 'Salve Filippo, vorrei avere maggiori informazioni sui vostri veicoli e servizi.';
+            const carImages = useMemo(() => {
+                if (!selectedCar) return [];
+                const images = [selectedCar.immagine];
+                if (selectedCar.galleria && Array.isArray(selectedCar.galleria)) {
+                    selectedCar.galleria.forEach(img => {
+                        if (img !== selectedCar.immagine) images.push(img);
+                    });
+                }
+                return images;
+            }, [selectedCar]);
 
-          return (
-            <div className="min-h-screen bg-white text-slate-800 antialiased flex flex-col">
-              
-              {/* HEADER DESKTOP */}
-              <header className="hidden lg:block relative w-full h-[140px] bg-white z-50 shadow-sm border-b-4 border-[#007A33]">
-                <div className="absolute inset-0 pointer-events-none overflow-hidden">
-                  <div className="absolute top-0 left-0 w-[42%] h-[90px] bg-gray-100" style={{ clipPath: 'polygon(0 0, 100% 0, 85% 100%, 0 100%)' }}></div>
-                </div>
-                <div className="relative z-10 max-w-[1440px] mx-auto h-full flex flex-col">
-                  <div className="flex h-[90px]">
-                    <div className="w-[35%] flex items-center pl-10 cursor-pointer" onClick={() => navigate('Home')}>
-                      {/* LOGO AGGIORNATO (Ingrandito) */}
-                      <img src="Logo.png" alt="Logo Bongi Sport Car" className="h-[75px] w-auto object-contain drop-shadow-md rounded-xl" />
-                    </div>
-                    <div className="w-[65%] flex items-center justify-end gap-8 pr-10">
-                       <div className="flex items-center gap-3">
-                         <div className="bg-[#007A33]/10 p-2 rounded-full w-8 h-8 flex items-center justify-center"><i className="fa-solid fa-location-dot text-[#007A33]"></i></div>
-                         <div className="flex flex-col"><span className="text-[10px] font-bold text-gray-400 uppercase">Sede:</span><span className="text-[12px] font-bold text-gray-800">Alcamo (TP)</span></div>
-                       </div>
-                       <div className="flex items-center gap-3">
-                         <div className="bg-[#007A33]/10 p-2 rounded-full w-8 h-8 flex items-center justify-center"><i className="fa-solid fa-phone text-[#007A33]"></i></div>
-                         <div className="flex flex-col"><span className="text-[10px] font-bold text-gray-400 uppercase">Chiamaci:</span><span className="text-[13px] font-bold text-gray-800">{CONFIG.telefonoDisplay}</span></div>
-                       </div>
-                       <div className="flex items-center gap-3">
-                         <div className="bg-[#007A33]/10 p-2 rounded-full w-8 h-8 flex items-center justify-center"><i className="fa-brands fa-instagram text-[#007A33]"></i></div>
-                         <div className="flex flex-col"><span className="text-[10px] font-bold text-gray-400 uppercase">Social:</span><a href={CONFIG.instagram} target="_blank" rel="noreferrer" className="text-[13px] font-bold text-gray-800 hover:text-[#007A33] transition-colors">Visita la Pagina</a></div>
-                       </div>
-                    </div>
-                  </div>
-                  <div className="flex h-[50px] items-center justify-between text-black px-10">
-                     <nav className="flex gap-8 pl-[10%] text-[13px] font-bold uppercase tracking-widest h-full items-center">
-                       {menuItems.map((item) => (
-                         <a 
-                            key={item.label} 
-                            href="#" 
-                            onClick={(e) => { e.preventDefault(); navigate(item.id); }}
-                            className={`transition-all duration-300 border-b-2 py-1 ${currentPage === item.id ? 'text-[#007A33] border-[#007A33]' : 'border-transparent text-gray-600 hover:text-[#007A33]'}`}
-                         >
-                            {item.label}
-                         </a>
-                       ))}
-                     </nav>
-                  </div>
-                </div>
-              </header>
-
-              {/* HEADER MOBILE */}
-              <header className="lg:hidden bg-white text-black p-4 flex justify-between items-center sticky top-0 z-50 border-b-4 border-[#007A33] shadow-sm">
-                <div className="flex items-center cursor-pointer" onClick={() => navigate('Home')}>
-                    <img src="Logo.png" alt="Logo Bongi Sport Car" className="h-[55px] w-auto object-contain rounded-xl" />
-                </div>
-                <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
-                  {isMobileMenuOpen ? <i className="fa-solid fa-xmark text-[30px] text-[#007A33]"></i> : <i className="fa-solid fa-bars text-[30px] text-gray-800"></i>}
-                </button>
-              </header>
-
-              {/* MENU MOBILE OVERLAY */}
-              {isMobileMenuOpen && (
-                <div className="lg:hidden fixed inset-0 z-40 bg-[#007A33] pt-28 px-8 text-white flex flex-col gap-6 overflow-y-auto">
-                    {menuItems.map(item => (
-                        <a key={item.label} href="#" onClick={(e) => { e.preventDefault(); navigate(item.id); }} className={`text-2xl font-bold uppercase tracking-widest border-b border-white/20 pb-3 ${currentPage === item.id ? 'text-black' : ''}`}>{item.label}</a>
-                    ))}
-                </div>
-              )}
-
-              <main className="flex-grow">
-                  {/* SCHERMATA DI CARICAMENTO */}
-                  {isLoading && currentPage !== 'vendi' && currentPage !== 'chi-siamo' && currentPage !== 'Contatti' && (
-                      <div className="flex justify-center items-center py-40">
-                          <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-[#007A33]"></div>
-                      </div>
-                  )}
-
-                  {/* HOME PAGE */}
-                  {currentPage === 'Home' && !isLoading && (
-                      <>
-                          <section className="relative h-[650px] flex items-center justify-center text-center overflow-hidden border-b-8 border-[#007A33] bg-black">
-                            {/* Livello Immagini: si scambiano dolcemente */}
-                            {heroImages.map((img, index) => (
-                              <div 
-                                key={index}
-                                className={`absolute inset-0 w-full h-full bg-cover bg-center transition-all duration-[1500ms] ease-in-out ${index === heroImageIndex ? 'opacity-100 scale-105' : 'opacity-0 scale-100'}`} 
-                                style={{ backgroundImage: `url("${img}")` }}
-                              >
-                              </div>
-                            ))}
+            return (
+                <div className="min-h-screen flex flex-col overflow-x-hidden w-full">
+                    <nav className="bg-white/95 backdrop-blur-md border-b sticky top-0 z-50 px-6 py-4 shadow-sm w-full">
+                        <div className="max-w-7xl mx-auto flex justify-between items-center">
+                            <div className="flex items-center gap-2 cursor-pointer" onClick={() => { setCurrentPage('home'); setSelectedCar(null); setIsMobileMenuOpen(false); }}>
+                                {CONFIG.logoUrl ? (
+                                    <img src={CONFIG.logoUrl} alt={CONFIG.nomeConcessionaria} className="h-14 w-auto object-contain drop-shadow-sm rounded-xl" />
+                                ) : (
+                                    <>
+                                        <div className="bg-bongi-orange p-2 rounded-lg text-white">
+                                            <i data-lucide="car" className="w-6 h-6"></i>
+                                        </div>
+                                        <span className="font-black uppercase italic tracking-tighter text-xl text-slate-900 font-montserrat">{CONFIG.nomeConcessionaria}</span>
+                                    </>
+                                )}
+                            </div>
                             
-                            {/* Livello Overlay: fisso, evita gli sbalzi di luce */}
-                            <div className="absolute inset-0 bg-black/70 z-10"></div>
-                            
-                            {/* Livello Contenuto */}
-                            <div className="relative z-20 px-6 max-w-5xl mx-auto">
-                              <h2 className="text-5xl md:text-7xl font-black text-white mb-2 uppercase tracking-wider leading-tight">BONGI <span className="text-[#007A33]">SPORT CAR</span></h2>
-                              <h3 className="text-xl md:text-3xl font-bold text-gray-300 mb-6 uppercase tracking-widest">Concessionario Auto e Moto</h3>
-                              <div className="flex items-center justify-center gap-5 my-8"><div className="h-px w-24 bg-[#007A33]/50"></div><i className="fa-solid fa-car text-[30px] text-[#007A33]"></i><div className="h-px w-24 bg-[#007A33]/50"></div></div>
-                              <p className="text-white text-lg md:text-xl font-light mb-12 max-w-3xl mx-auto leading-relaxed opacity-90">
-                                La passione per i motori dal 2017 con Filippo Bongi. Un'ampia selezione di veicoli nuovi, usati e a Km0. Affidabilità, competenza e garanzia al tuo servizio.
-                              </p>
-                              <button onClick={() => navigate('Inventario')} className="bg-[#007A33] text-white px-12 py-4 rounded-full font-black uppercase tracking-widest hover:bg-black transition-all shadow-lg border-2 border-[#007A33]">SCOPRI I VEICOLI</button>
+                            <div className="hidden md:flex gap-8 text-xs font-bold uppercase tracking-widest text-slate-600 font-montserrat">
+                                <button onClick={() => { setCurrentPage('home'); setSelectedCar(null); }} className={`hover:text-bongi-orange transition ${currentPage === 'home' ? 'text-bongi-orange' : ''}`}>Home</button>
+                                <button onClick={() => { setCurrentPage('piazzale'); setSelectedCar(null); }} className={`hover:text-bongi-orange transition ${currentPage === 'piazzale' ? 'text-bongi-orange' : ''}`}>Piazzale</button>
+                                <button onClick={() => { setCurrentPage('vendi'); setSelectedCar(null); }} className={`hover:text-bongi-orange transition ${currentPage === 'vendi' ? 'text-bongi-orange' : ''}`}>Vendi Auto</button>
+                                <button onClick={() => { setCurrentPage('chisiamo'); setSelectedCar(null); }} className={`hover:text-bongi-orange transition ${currentPage === 'chisiamo' ? 'text-bongi-orange' : ''}`}>Chi Siamo</button>
+                                <button onClick={() => { setCurrentPage('contatti'); setSelectedCar(null); }} className={`hover:text-bongi-orange transition ${currentPage === 'contatti' ? 'text-bongi-orange' : ''}`}>Contatti</button>
                             </div>
-                          </section>
 
-                          <section className="py-24 bg-gray-50">
-                            <div className="max-w-[1400px] mx-auto px-6">
-                              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-                                {/* SERVIZIO 1 */}
-                                <div className="flex flex-col items-center group bg-white p-10 rounded-3xl shadow-sm hover:shadow-xl transition-all border-b-4 border-transparent hover:border-[#007A33]">
-                                  <div className="w-24 h-24 rounded-full bg-[#007A33] flex items-center justify-center mb-8"><i className="fa-solid fa-car-side text-[38px] text-white"></i></div>
-                                  <h3 className="text-xl font-black text-black mb-2 uppercase tracking-tighter">Concessionaria</h3>
-                                  <span className="text-[10px] bg-gray-100 text-[#007A33] px-3 py-1 rounded-full font-bold uppercase tracking-widest mb-4">Auto e Moto</span>
-                                  <p className="text-gray-500 text-sm leading-relaxed">Trattiamo la vendita di automobili e motocicli offrendoti un servizio completo, dalla consulenza fino alla messa su strada del tuo veicolo.</p>
-                                </div>
-                                {/* SERVIZIO 2 */}
-                                <div className="flex flex-col items-center group bg-[#007A33] p-10 rounded-3xl shadow-xl transition-all transform md:scale-105 z-10">
-                                  <div className="w-24 h-24 rounded-full bg-white flex items-center justify-center mb-8"><i className="fa-solid fa-tags text-[38px] text-[#007A33]"></i></div>
-                                  <h3 className="text-xl font-black text-white mb-2 uppercase tracking-tighter">Nuovo, Usato, Km0</h3>
-                                  <span className="text-[10px] bg-black text-white px-3 py-1 rounded-full font-bold uppercase tracking-widest mb-4">La tua scelta</span>
-                                  <p className="text-gray-100 text-sm leading-relaxed">Che tu stia cercando il risparmio di un buon usato garantito, l'occasione di un Km0 o il fascino del nuovo, abbiamo la soluzione giusta.</p>
-                                </div>
-                                {/* SERVIZIO 3 */}
-                                <div className="flex flex-col items-center group bg-white p-10 rounded-3xl shadow-sm hover:shadow-xl transition-all border-b-4 border-transparent hover:border-[#007A33]">
-                                  <div className="w-24 h-24 rounded-full bg-black flex items-center justify-center mb-8"><i className="fa-solid fa-truck-moving text-[38px] text-[#007A33]"></i></div>
-                                  <h3 className="text-xl font-black text-black mb-2 uppercase tracking-tighter">Settore Edile</h3>
-                                  <span className="text-[10px] bg-gray-100 text-gray-500 px-3 py-1 rounded-full font-bold uppercase tracking-widest mb-4">Movimento Terra</span>
-                                  <p className="text-gray-500 text-sm leading-relaxed">In parallelo ai veicoli tradizionali, curiamo il settore edile offrendo mezzi e macchinari professionali per il movimento terra.</p>
-                                </div>
-                              </div>
+                            <button className="md:hidden text-slate-900 focus:outline-none p-2" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
+                                <i data-lucide={isMobileMenuOpen ? "x" : "menu"} className="w-6 h-6"></i>
+                            </button>
+                        </div>
+
+                        {isMobileMenuOpen && (
+                            <div className="md:hidden absolute top-full left-0 w-full bg-white border-b shadow-2xl flex flex-col py-6 px-8 gap-6 text-sm font-bold uppercase tracking-widest text-slate-600 animate-in slide-in-from-top-2 duration-300 font-montserrat">
+                                <button onClick={() => { setCurrentPage('home'); setSelectedCar(null); setIsMobileMenuOpen(false); }} className={`text-left hover:text-bongi-orange transition ${currentPage === 'home' ? 'text-bongi-orange' : ''}`}>Home</button>
+                                <button onClick={() => { setCurrentPage('piazzale'); setSelectedCar(null); setIsMobileMenuOpen(false); }} className={`text-left hover:text-bongi-orange transition ${currentPage === 'piazzale' ? 'text-bongi-orange' : ''}`}>Piazzale</button>
+                                <button onClick={() => { setCurrentPage('vendi'); setSelectedCar(null); setIsMobileMenuOpen(false); }} className={`text-left hover:text-bongi-orange transition ${currentPage === 'vendi' ? 'text-bongi-orange' : ''}`}>Vendi Auto</button>
+                                <button onClick={() => { setCurrentPage('chisiamo'); setSelectedCar(null); setIsMobileMenuOpen(false); }} className={`text-left hover:text-bongi-orange transition ${currentPage === 'chisiamo' ? 'text-bongi-orange' : ''}`}>Chi Siamo</button>
+                                <button onClick={() => { setCurrentPage('contatti'); setSelectedCar(null); setIsMobileMenuOpen(false); }} className={`text-left hover:text-bongi-orange transition ${currentPage === 'contatti' ? 'text-bongi-orange' : ''}`}>Contatti</button>
                             </div>
-                          </section>
+                        )}
+                    </nav>
 
-                          {/* SEZIONE VEICOLI IN EVIDENZA */}
-                          <section className="py-24 bg-white border-t border-gray-100">
-                            <div className="max-w-[1200px] mx-auto px-6">
-                              <div className="text-center mb-16">
-                                <h2 className="text-4xl font-black text-black uppercase tracking-tighter mb-4">VEICOLI IN EVIDENZA</h2>
-                                <div className="flex items-center justify-center gap-4 mb-6">
-                                  <div className="h-[2px] w-12 bg-gray-200"></div>
-                                  <i className="fa-solid fa-car text-[20px] text-[#007A33]"></i>
-                                  <div className="h-[2px] w-12 bg-gray-200"></div>
+                    <main className="flex-grow w-full">
+                        {/* HOMEPAGE */}
+                        {currentPage === 'home' && (
+                            <>
+                                <HeroSlider />
+
+                                <div className="ticker-wrapper">
+                                    <div className="ticker-track">
+                                        {[...MARCHI_AUTO, ...MARCHI_AUTO, ...MARCHI_AUTO, ...MARCHI_AUTO].map((brand, idx) => (
+                                            <div key={idx} className="slide">
+                                                <img src={brand.src} alt={brand.alt} />
+                                            </div>
+                                        ))}
+                                    </div>
                                 </div>
-                                <p className="text-gray-500 text-sm max-w-2xl mx-auto">Le migliori occasioni selezionate e verificate dalla nostra agenzia.</p>
-                              </div>
 
-                              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                                {carsData.slice(0, 3).map((car) => (
-                                  <div key={car.id} onClick={() => navigate('Dettaglio', car)} className="bg-white rounded-2xl overflow-hidden shadow-lg group cursor-pointer transition-all duration-500 hover:-translate-y-2 border border-gray-100 relative">
-                                    <div className="absolute top-4 left-4 z-10 flex gap-2">
-                                        {car.status === 'Venduta' ? (
-                                            <span className="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest shadow-md bg-red-600 text-white border border-red-500">
-                                                VENDUTA
-                                            </span>
-                                        ) : (
-                                            <span className="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest shadow-md bg-black text-white">
-                                                {car.category || 'Veicolo'}
-                                            </span>
-                                        )}
-                                        {car.condition && car.status !== 'Venduta' && (
-                                            <span className="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest shadow-md bg-[#007A33] text-white">
-                                                {car.condition}
-                                            </span>
-                                        )}
-                                    </div>
-                                    <div className="relative h-60 overflow-hidden">
-                                      <img src={car.images && car.images[0] ? car.images[0] : "https://placehold.co/600x400/eeeeee/999999?text=Nessuna+Foto"} alt={car.model} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
-                                      <div className="absolute top-4 right-4 bg-[#007A33] text-white px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-widest shadow-md">{car.price || 'Trattativa Riservata'}</div>
-                                    </div>
-                                    <div className="p-8">
-                                      <div className="flex items-center gap-2 mb-4">
-                                        <div className="w-1.5 h-6 bg-[#007A33] rounded-full"></div>
-                                        <h3 className="text-xl font-black text-black uppercase tracking-tighter">{car.brand} {car.model}</h3>
-                                      </div>
-                                      <p className="text-gray-500 text-sm leading-relaxed mb-8 h-12 overflow-hidden whitespace-pre-line line-clamp-2">{car.description || 'Nessuna descrizione fornita.'}</p>
-                                      
-                                      <div className="grid grid-cols-3 bg-gray-50 rounded-xl divide-x divide-gray-200">
-                                        <div className="py-4 px-1 text-center">
-                                          <p className="text-[9px] text-gray-400 font-bold uppercase mb-1">Anno</p>
-                                          <p className="text-[11px] font-black text-black truncate">{car.year || '-'}</p>
+                                <div className="py-24 px-6 bg-slate-50 border-b">
+                                    <div className="max-w-7xl mx-auto">
+                                        <div className="text-center mb-16">
+                                            <h2 className="text-4xl md:text-5xl font-black uppercase italic tracking-tighter font-montserrat mb-4 text-slate-900">I Nostri <span className="text-bongi-orange">Servizi</span></h2>
+                                            <p className="text-slate-500 max-w-2xl mx-auto font-medium">Scopri l'offerta completa di {CONFIG.nomeConcessionaria}. Dai veicoli stradali ai mezzi da lavoro professionali.</p>
                                         </div>
-                                        <div className="py-4 px-1 text-center">
-                                          <p className="text-[9px] text-gray-400 font-bold uppercase mb-1">Cambio</p>
-                                          <p className="text-[11px] font-black text-black truncate uppercase">{car.transmission || '-'}</p>
+                                        <div className="grid lg:grid-cols-3 gap-10">
+                                            {/* SERVIZIO 1: AUTO E MOTO */}
+                                            <div className="bg-white p-10 rounded-[2.5rem] shadow-xl hover:shadow-2xl transition duration-300 border-b-4 border-[#FF5A00] group relative overflow-hidden">
+                                                <div className="absolute -top-10 -right-10 opacity-5 group-hover:scale-110 transition-transform duration-500"><i data-lucide="car-front" className="w-64 h-64"></i></div>
+                                                <div className="w-16 h-16 bg-orange-50 text-bongi-orange rounded-2xl flex items-center justify-center mb-8 shadow-sm">
+                                                    <i data-lucide="car-front" className="w-8 h-8"></i>
+                                                </div>
+                                                <h3 className="font-heading font-black uppercase italic text-2xl mb-4 text-slate-900">Concessionaria <br/>Auto & Moto</h3>
+                                                <p className="text-slate-600 text-sm leading-relaxed mb-6">Trattiamo la vendita di automobili e motocicli offrendoti un servizio completo, dalla consulenza fino alla messa su strada del tuo veicolo ideale.</p>
+                                                <ul className="text-xs font-bold text-slate-500 space-y-2 uppercase tracking-wide mb-8">
+                                                    <li className="flex items-center gap-2"><i data-lucide="check-circle-2" className="w-4 h-4 text-[#0F172A]"></i> Vasta Scelta Multimarca</li>
+                                                    <li className="flex items-center gap-2"><i data-lucide="check-circle-2" className="w-4 h-4 text-[#0F172A]"></i> Permuta Usato</li>
+                                                </ul>
+                                                <button onClick={() => setCurrentPage('vendi')} className="w-full bg-[#FF5A00] hover:bg-[#CC4800] text-white py-3.5 rounded-xl font-bold uppercase tracking-widest text-xs transition-colors flex items-center justify-center gap-2 shadow-md">
+                                                    <i data-lucide="car" className="w-4 h-4"></i> Vendi il tuo veicolo
+                                                </button>
+                                            </div>
+                                            
+                                            {/* SERVIZIO 2: NUOVO USATO KM0 */}
+                                            <div className="bg-slate-900 p-10 rounded-[2.5rem] shadow-xl hover:shadow-2xl transition duration-300 border-b-4 border-[#FF5A00] group relative overflow-hidden">
+                                                <div className="absolute -top-10 -right-10 opacity-5 group-hover:scale-110 transition-transform duration-500"><i data-lucide="tags" className="w-64 h-64 text-white"></i></div>
+                                                <div className="w-16 h-16 bg-white/10 text-bongi-orange rounded-2xl flex items-center justify-center mb-8 shadow-sm">
+                                                    <i data-lucide="tags" className="w-8 h-8"></i>
+                                                </div>
+                                                <h3 className="font-heading font-black uppercase italic text-2xl mb-4 text-white">Nuovo, Usato <br/>& Km0</h3>
+                                                <p className="text-slate-400 text-sm leading-relaxed mb-6">Che tu stia cercando il risparmio di un buon usato garantito, l'occasione di un Km0 introvabile o il fascino del nuovo da immatricolare, abbiamo la soluzione giusta per te.</p>
+                                                <ul className="text-xs font-bold text-slate-300 space-y-2 uppercase tracking-wide">
+                                                    <li className="flex items-center gap-2"><i data-lucide="check-circle-2" className="w-4 h-4 text-[#FF5A00]"></i> Usato Certificato</li>
+                                                    <li className="flex items-center gap-2"><i data-lucide="check-circle-2" className="w-4 h-4 text-[#FF5A00]"></i> Prezzi Competitivi</li>
+                                                </ul>
+                                            </div>
+
+                                            {/* SERVIZIO 3: SETTORE EDILE */}
+                                            <div className="bg-white p-10 rounded-[2.5rem] shadow-xl hover:shadow-2xl transition duration-300 border-b-4 border-slate-300 group relative overflow-hidden">
+                                                <div className="absolute -top-10 -right-10 opacity-5 group-hover:scale-110 transition-transform duration-500"><i data-lucide="truck" className="w-64 h-64"></i></div>
+                                                <div className="w-16 h-16 bg-slate-100 text-slate-800 rounded-2xl flex items-center justify-center mb-8 shadow-sm">
+                                                    <i data-lucide="truck" className="w-8 h-8"></i>
+                                                </div>
+                                                <h3 className="font-heading font-black uppercase italic text-2xl mb-4 text-slate-900">Settore Edile <br/>Mov. Terra</h3>
+                                                <p className="text-slate-600 text-sm leading-relaxed mb-6">In parallelo ai veicoli tradizionali, curiamo il settore edile offrendo mezzi e macchinari professionali per il movimento terra e per i tuoi cantieri.</p>
+                                                <a href={`tel:${CONFIG.telefonoLink}`} className="inline-flex items-center gap-2 text-bongi-orange font-black uppercase tracking-widest text-sm hover:text-[#CC4800] transition mt-4">
+                                                    <i data-lucide="phone-call" className="w-5 h-5"></i> Richiedi Info
+                                                </a>
+                                            </div>
                                         </div>
-                                        <div className="py-4 px-1 text-center">
-                                          <p className="text-[9px] text-gray-400 font-bold uppercase mb-1">Km</p>
-                                          <p className="text-[11px] font-black text-black truncate">{car.mileage || '-'}</p>
-                                        </div>
-                                      </div>
                                     </div>
-                                  </div>
-                                ))}
-                              </div>
-                              
-                              {carsData.length > 0 && (
-                                <div className="text-center mt-12">
-                                  <button onClick={() => navigate('Inventario')} className="border-2 border-[#007A33] text-[#007A33] px-8 py-3 rounded-full font-bold uppercase tracking-widest text-xs hover:bg-[#007A33] hover:text-white transition-all shadow-sm">
-                                    Vedi tutti i veicoli
-                                  </button>
                                 </div>
-                              )}
-                            </div>
-                          </section>
-                      </>
-                  )}
 
-                  {/* PARCO AUTO/MOTO */}
-                  {currentPage === 'Inventario' && !isLoading && (
-                      <section className="py-24 bg-gray-50">
-                          <div className="max-w-[1200px] mx-auto px-6">
-                            <div className="text-center mb-10">
-                              <h1 className="text-5xl font-black uppercase tracking-tighter text-black mb-4">Il Nostro Parco Veicoli</h1>
-                              <div className="flex items-center justify-center gap-4 mb-8"><div className="h-[2px] w-12 bg-[#007A33]"></div><i className="fa-solid fa-motorcycle text-[20px] text-[#007A33]"></i><div className="h-[2px] w-12 bg-[#007A33]"></div></div>
-                              
-                              <div className="flex flex-wrap justify-center gap-4 mb-12">
-                                  {['Tutti', 'Auto', 'Moto', 'Usato', 'Nuovo', 'Km0'].map(filter => (
-                                      <button 
-                                        key={filter}
-                                        onClick={() => setInventoryFilter(filter)}
-                                        className={`px-6 py-2 rounded-full font-bold uppercase tracking-widest text-xs transition-all shadow-sm ${
-                                            inventoryFilter === filter 
-                                            ? 'bg-[#007A33] text-white border-2 border-[#007A33]' 
-                                            : 'bg-white text-gray-500 border-2 border-gray-200 hover:border-[#007A33] hover:text-[#007A33]'
-                                        }`}
-                                      >
-                                          {filter === 'Tutti' ? 'Tutti i Veicoli' : filter}
-                                      </button>
-                                  ))}
-                              </div>
-                            </div>
+                                <div className="bg-slate-900 py-16 px-6 relative overflow-hidden">
+                                    <div className="absolute top-0 right-0 w-1/2 h-full bg-bongi-orange opacity-20 transform skew-x-12"></div>
+                                    <div className="max-w-5xl mx-auto flex flex-col md:flex-row items-center justify-between relative z-10 gap-8">
+                                        <div className="text-left">
+                                            <h2 className="text-3xl md:text-4xl font-black uppercase italic text-white font-montserrat mb-3">Finanziamenti <span className="text-bongi-orange">Personalizzati</span></h2>
+                                            <p className="text-slate-300 font-medium text-lg">Acquista il veicolo dei tuoi sogni con rate comode e flessibili, direttamente in sede.</p>
+                                        </div>
+                                        <button onClick={() => setCurrentPage('contatti')} className="bg-bongi-orange text-white px-8 py-4 rounded-xl font-bold uppercase tracking-widest hover:bg-[#CC4800] transition transform hover:scale-105 whitespace-nowrap shadow-lg">
+                                            Richiedi Info
+                                        </button>
+                                    </div>
+                                </div>
+                            </>
+                        )}
+                        
+                        {/* SEZIONE PIAZZALE */}
+                        {(currentPage === 'home' || currentPage === 'piazzale') && (
+                            <div className="py-16 px-6 max-w-7xl mx-auto">
+                                <div className="flex flex-col md:flex-row justify-between items-center mb-12 gap-6 border-b pb-8">
+                                    <h2 className="text-4xl font-black uppercase italic tracking-tight font-montserrat text-slate-900">
+                                        {currentPage === 'home' ? 'Vetrina ' : 'Il Nostro '} 
+                                        <span className="text-bongi-orange">{currentPage === 'home' ? 'Occasioni' : 'Piazzale'}</span>
+                                    </h2>
+                                    
+                                    {currentPage === 'home' ? (
+                                        <div className="flex gap-2 bg-white p-1 rounded-full shadow-sm border overflow-x-auto max-w-full custom-scrollbar pb-1 md:pb-0">
+                                            {uniqueCategorie.slice(0, 6).map(c => (
+                                                <button key={c} onClick={() => {setFilters(prev => ({...prev, categoria: c})); setCurrentPage('piazzale');}} className={`whitespace-nowrap px-4 md:px-6 py-2 rounded-full text-[10px] font-bold uppercase transition ${filters.categoria === c ? 'bg-bongi-orange text-white shadow-md' : 'text-slate-500 hover:bg-slate-50'}`}>{c}</button>
+                                            ))}
+                                        </div>
+                                    ) : (
+                                        <button onClick={() => setCurrentPage('home')} className="text-xs font-bold uppercase tracking-widest text-slate-500 hover:text-bongi-orange transition flex items-center gap-2">
+                                            <i data-lucide="arrow-left" className="w-4 h-4"></i> Torna alla Home
+                                        </button>
+                                    )}
+                                </div>
 
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                                {filteredCars.map((car) => (
-                                  <div key={car.id} onClick={() => navigate('Dettaglio', car)} className="bg-white rounded-2xl overflow-hidden shadow-lg group cursor-pointer transition-all duration-500 hover:-translate-y-2 border border-gray-100 relative">
-                                    <div className="absolute top-4 left-4 z-10 flex gap-2">
-                                        {car.status === 'Venduta' ? (
-                                            <span className="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest shadow-md bg-red-600 text-white border border-red-500">
-                                                VENDUTA
-                                            </span>
-                                        ) : (
-                                            <span className="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest shadow-md bg-black text-white">
-                                                {car.category}
-                                            </span>
-                                        )}
-                                        {car.condition && car.status !== 'Venduta' && (
-                                            <span className="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest shadow-md bg-[#007A33] text-white">
-                                                {car.condition}
-                                            </span>
-                                        )}
+                                {currentPage === 'piazzale' && (
+                                    <div className="bg-white p-6 md:p-8 rounded-[2rem] shadow-lg border border-slate-100 mb-12 animate-in fade-in slide-in-from-top-4 duration-500">
+                                        <div className="flex justify-between items-center mb-6 border-b border-slate-100 pb-4">
+                                            <h3 
+                                                className="font-black uppercase italic tracking-widest text-lg text-slate-900 flex items-center gap-3 cursor-pointer md:cursor-default select-none font-montserrat"
+                                                onClick={() => setIsFiltersOpen(!isFiltersOpen)}
+                                            >
+                                                <div className="bg-slate-100 p-2 rounded-lg"><i data-lucide="sliders-horizontal" className="w-5 h-5 text-slate-900"></i></div>
+                                                Filtra Veicoli
+                                                <i data-lucide={isFiltersOpen ? "chevron-up" : "chevron-down"} className="w-5 h-5 md:hidden ml-2 text-slate-500"></i>
+                                            </h3>
+                                            <button onClick={resetFilters} className="text-[10px] font-bold uppercase text-slate-500 hover:text-bongi-orange transition flex items-center gap-2 bg-slate-50 px-4 py-2 rounded-xl hover:bg-orange-50">
+                                                <i data-lucide="trash-2" className="w-3 h-3"></i> Reset Filtri
+                                            </button>
+                                        </div>
+                                        <div className={`grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-7 gap-4 ${isFiltersOpen ? 'grid' : 'hidden md:grid'}`}>
+                                            <div className="flex flex-col">
+                                                <label className="text-[10px] font-bold uppercase text-slate-500 mb-2 pl-1 font-montserrat">Stato</label>
+                                                <select name="condizione" value={filters.condizione} onChange={handleFilterChange} className="bg-slate-50 border-none ring-1 ring-slate-200 text-slate-700 text-sm font-bold rounded-xl focus:ring-2 focus:ring-bongi-orange block w-full p-3 transition shadow-sm cursor-pointer">
+                                                    {uniqueCondizioni.map(c => <option key={c} value={c}>{c}</option>)}
+                                                </select>
+                                            </div>
+                                            <div className="flex flex-col">
+                                                <label className="text-[10px] font-bold uppercase text-slate-500 mb-2 pl-1 font-montserrat">Categoria</label>
+                                                <select name="categoria" value={filters.categoria} onChange={handleFilterChange} className="bg-slate-50 border-none ring-1 ring-slate-200 text-slate-700 text-sm font-bold rounded-xl focus:ring-2 focus:ring-bongi-orange block w-full p-3 transition shadow-sm cursor-pointer">
+                                                    {uniqueCategorie.map(c => <option key={c} value={c}>{c}</option>)}
+                                                </select>
+                                            </div>
+                                            <div className="flex flex-col">
+                                                <label className="text-[10px] font-bold uppercase text-slate-500 mb-2 pl-1 font-montserrat">Marca</label>
+                                                <select name="marca" value={filters.marca} onChange={handleFilterChange} className="bg-slate-50 border-none ring-1 ring-slate-200 text-slate-700 text-sm font-bold rounded-xl focus:ring-2 focus:ring-bongi-orange block w-full p-3 transition shadow-sm cursor-pointer">
+                                                    {uniqueMarche.map(m => <option key={m} value={m}>{m}</option>)}
+                                                </select>
+                                            </div>
+                                            <div className="flex flex-col">
+                                                <label className="text-[10px] font-bold uppercase text-slate-500 mb-2 pl-1 font-montserrat">Alimentazione</label>
+                                                <select name="alimentazione" value={filters.alimentazione} onChange={handleFilterChange} className="bg-slate-50 border-none ring-1 ring-slate-200 text-slate-700 text-sm font-bold rounded-xl focus:ring-2 focus:ring-bongi-orange block w-full p-3 transition shadow-sm cursor-pointer">
+                                                    {uniqueAlimentazioni.map(a => <option key={a} value={a}>{a}</option>)}
+                                                </select>
+                                            </div>
+                                            <div className="flex flex-col">
+                                                <label className="text-[10px] font-bold uppercase text-slate-500 mb-2 pl-1 font-montserrat">Prezzo Max</label>
+                                                <input type="number" name="prezzoMax" value={filters.prezzoMax} onChange={handleFilterChange} placeholder="Nessun limite" className="bg-slate-50 border-none ring-1 ring-slate-200 text-slate-700 text-sm font-bold rounded-xl focus:ring-2 focus:ring-bongi-orange block w-full p-3 transition shadow-sm placeholder:font-normal" />
+                                            </div>
+                                            <div className="flex flex-col">
+                                                <label className="text-[10px] font-bold uppercase text-slate-500 mb-2 pl-1 font-montserrat">KM Max</label>
+                                                <input type="number" name="kmMax" value={filters.kmMax} onChange={handleFilterChange} placeholder="Nessun limite" className="bg-slate-50 border-none ring-1 ring-slate-200 text-slate-700 text-sm font-bold rounded-xl focus:ring-2 focus:ring-bongi-orange block w-full p-3 transition shadow-sm placeholder:font-normal" />
+                                            </div>
+                                            <div className="flex flex-col">
+                                                <label className="text-[10px] font-bold uppercase text-slate-500 mb-2 pl-1 font-montserrat">Anno Minimo</label>
+                                                <input type="number" name="annoMin" value={filters.annoMin} onChange={handleFilterChange} placeholder="Es. 2015" className="bg-slate-50 border-none ring-1 ring-slate-200 text-slate-700 text-sm font-bold rounded-xl focus:ring-2 focus:ring-bongi-orange block w-full p-3 transition shadow-sm placeholder:font-normal" />
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div className="relative h-60 overflow-hidden">
-                                      <img src={car.images && car.images[0] ? car.images[0] : "https://placehold.co/600x400/eeeeee/999999?text=Nessuna+Foto"} alt={car.model} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
-                                      <div className="absolute top-4 right-4 bg-[#007A33] text-white px-3 py-1 rounded-full text-[11px] font-black uppercase tracking-widest shadow-md">{car.price}</div>
-                                    </div>
-                                    <div className="p-8">
-                                      <h3 className="text-xl font-black text-black uppercase tracking-tighter mb-4">{car.brand} {car.model}</h3>
-                                      <div className="flex justify-between text-sm text-gray-500 mb-6">
-                                          <span className="flex items-center gap-2"><i className="fa-regular fa-calendar text-[#007A33]"></i> {car.year}</span>
-                                          <span className="flex items-center gap-2"><i className="fa-solid fa-gauge-high text-[#007A33]"></i> {car.mileage}</span>
-                                          <span className="flex items-center gap-2"><i className="fa-solid fa-gas-pump text-[#007A33]"></i> {car.fuel}</span>
-                                      </div>
-                                      <button className="w-full bg-gray-100 text-black border border-gray-200 py-3 rounded-xl uppercase text-[11px] font-black tracking-widest hover:bg-[#007A33] hover:text-white transition-colors">Vedi Dettagli</button>
-                                    </div>
-                                  </div>
-                                ))}
-                                {filteredCars.length === 0 && (
-                                    <div className="col-span-1 md:col-span-3 text-center py-20 text-gray-500">
-                                        Nessun veicolo trovato per questa selezione al momento.
+                                )}
+
+                                {/* LISTA AUTO */}
+                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+                                    {filteredAutos.map(car => (
+                                        <div key={car.id} onClick={() => openCarDetails(car)} className="bg-white rounded-[2rem] overflow-hidden shadow-xl hover:shadow-2xl transition duration-500 border border-slate-100 group cursor-pointer">
+                                            <div className="h-64 overflow-hidden relative">
+                                                <img src={car.immagine} className="w-full h-full object-cover group-hover:scale-110 transition duration-700" alt={car.modello} />
+                                                <div className="absolute top-4 left-4 bg-white/90 backdrop-blur px-3 py-1 rounded-full text-[10px] font-black text-slate-900 shadow-sm uppercase tracking-widest">{car.categoria}</div>
+                                                
+                                                <div className={`absolute top-4 right-4 px-3 py-1 rounded-full text-[10px] font-black shadow-sm uppercase tracking-widest ${car.condizione === 'Nuovo' ? 'bg-green-500 text-white' : car.condizione === 'Km 0' ? 'bg-blue-500 text-white' : 'bg-slate-900 text-white'}`}>
+                                                    {car.condizione || 'Usato'}
+                                                </div>
+
+                                                <div className="absolute bottom-4 right-4 bg-bongi-orange text-white px-4 py-2 rounded-2xl font-black text-xl shadow-lg font-montserrat">€{Number(car.prezzo)?.toLocaleString('it-IT')}</div>
+                                            </div>
+                                            <div className="p-8">
+                                                <h3 className="font-black uppercase text-2xl mb-1 tracking-tighter text-slate-900 leading-none font-montserrat">{car.marca}</h3>
+                                                <p className="text-slate-500 font-bold uppercase text-sm mb-4">{car.modello}</p>
+                                                <div className="flex items-center gap-4 text-slate-400 text-[10px] font-bold uppercase border-t pt-4">
+                                                    <span className="flex items-center gap-1"><i data-lucide="calendar" className="w-3 h-3 text-bongi-orange"></i> {car.anno}</span>
+                                                    <span className="flex items-center gap-1"><i data-lucide="gauge" className="w-3 h-3 text-bongi-orange"></i> {Number(car.km)?.toLocaleString('it-IT')} KM</span>
+                                                    <span className="flex items-center gap-1"><i data-lucide="fuel" className="w-3 h-3 text-bongi-orange"></i> {car.alimentazione}</span>
+                                                </div>
+                                                <button className="w-full mt-8 bg-slate-100 text-slate-900 py-4 rounded-xl font-bold text-[11px] uppercase tracking-widest group-hover:bg-bongi-orange group-hover:text-white transition duration-300">Visualizza Dettagli</button>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+
+                                {filteredAutos.length === 0 && (
+                                    <div className="flex flex-col items-center justify-center py-20 text-slate-400">
+                                        <div className="bg-slate-100 p-6 rounded-full mb-6">
+                                            <i data-lucide="car-front" className="w-12 h-12 opacity-40"></i>
+                                        </div>
+                                        <p className="text-xl font-black uppercase italic tracking-widest text-slate-600 mb-3 font-montserrat">Nessun veicolo trovato</p>
+                                        <p className="text-sm font-medium max-w-md text-center leading-relaxed">Purtroppo non abbiamo trovato veicoli corrispondenti alla tua ricerca. Prova a modificare o resettare i filtri.</p>
+                                        <button onClick={resetFilters} className="mt-8 bg-bongi-orange text-white px-8 py-4 rounded-2xl font-black uppercase text-xs hover:bg-[#CC4800] transition shadow-lg transform hover:-translate-y-1">Reset Filtri</button>
                                     </div>
                                 )}
                             </div>
-                          </div>
-                      </section>
-                  )}
+                        )}
 
-                  {/* DETTAGLIO VEICOLO */}
-                  {currentPage === 'Dettaglio' && selectedCar && !isLoading && (
-                      <section className="bg-gray-50 py-12">
-                          <div className="max-w-[1200px] mx-auto px-6">
-                              <button onClick={() => navigate('Inventario')} className="flex items-center gap-2 text-gray-500 hover:text-[#007A33] text-xs font-black uppercase tracking-widest mb-8 transition-colors w-max">
-                                  <i className="fa-solid fa-chevron-left text-[16px]"></i> Torna all'inventario
-                              </button>
-
-                              <div className="bg-white rounded-[2rem] shadow-xl border border-gray-200 p-6 md:p-12">
-                                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16">
-                                      
-                                      {/* Immagini */}
-                                      <div className="flex flex-col gap-4">
-                                          <div className="w-full aspect-[4/3] rounded-2xl overflow-hidden shadow-md border border-gray-100 relative bg-gray-100">
-                                              <div className="absolute top-4 left-4 z-10 flex gap-2">
-                                                  {selectedCar.status === 'Venduta' ? (
-                                                      <span className="px-4 py-2 rounded-full text-xs font-black uppercase tracking-widest shadow-md bg-red-600 text-white border border-red-500">
-                                                          VENDUTA
-                                                      </span>
-                                                  ) : (
-                                                      <span className="px-4 py-2 rounded-full text-xs font-black uppercase tracking-widest shadow-md bg-black text-white">
-                                                          {selectedCar.category}
-                                                      </span>
-                                                  )}
-                                                  {selectedCar.condition && selectedCar.status !== 'Venduta' && (
-                                                      <span className="px-4 py-2 rounded-full text-xs font-black uppercase tracking-widest shadow-md bg-[#007A33] text-white">
-                                                          {selectedCar.condition}
-                                                      </span>
-                                                  )}
-                                              </div>
-                                              <img src={selectedCar.images && selectedCar.images[activeImageIndex] ? selectedCar.images[activeImageIndex] : "https://placehold.co/800x600/eeeeee/999999?text=Nessuna+Foto"} alt={selectedCar.model} className="w-full h-full object-cover transition-opacity duration-300" />
-                                          </div>
-                                          {selectedCar.images && selectedCar.images.length > 1 && (
-                                              <div className="grid grid-cols-5 gap-3">
-                                                  {selectedCar.images.map((img, idx) => (
-                                                      <div 
+                        {/* DETTAGLIO VEICOLO */}
+                        {currentPage === 'prodotto' && selectedCar && (
+                            <div className="py-12 px-6 max-w-7xl mx-auto animate-in fade-in duration-500">
+                                <button onClick={() => setCurrentPage('piazzale')} className="flex items-center gap-2 text-slate-500 font-bold uppercase text-xs mb-8 hover:text-bongi-orange transition font-montserrat">
+                                    <i data-lucide="arrow-left" className="w-4 h-4"></i> Torna al piazzale
+                                </button>
+                                
+                                <div className="grid lg:grid-cols-2 gap-12 mb-16">
+                                    <div className="space-y-4 overflow-hidden w-full max-w-full">
+                                        <div className="rounded-[2.5rem] overflow-hidden shadow-2xl bg-white border border-slate-100 aspect-video relative">
+                                            <img src={activeImage} alt={selectedCar.modello} className="w-full h-full object-cover transition-opacity duration-300" />
+                                        </div>
+                                        {carImages.length > 1 && (
+                                            <div className="flex gap-4 overflow-x-auto pb-4 custom-scrollbar">
+                                                {carImages.map((img, idx) => (
+                                                    <div 
                                                         key={idx} 
-                                                        onClick={() => setActiveImageIndex(idx)}
-                                                        className={`aspect-square rounded-xl overflow-hidden cursor-pointer border-2 transition-all ${activeImageIndex === idx ? 'border-[#007A33] scale-95 shadow-md' : 'border-transparent opacity-60 hover:opacity-100'}`}
-                                                      >
-                                                          <img src={img} className="w-full h-full object-cover" alt={`Miniatura ${idx + 1}`} />
-                                                      </div>
-                                                  ))}
-                                              </div>
-                                          )}
-                                      </div>
+                                                        onClick={() => setActiveImage(img)}
+                                                        className={`flex-shrink-0 w-24 h-24 rounded-2xl overflow-hidden cursor-pointer border-4 transition ${activeImage === img ? 'border-bongi-orange shadow-lg' : 'border-white opacity-70 hover:opacity-100'}`}
+                                                    >
+                                                        <img src={img} className="w-full h-full object-cover" />
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        )}
+                                    </div>
 
-                                      {/* Info Dettaglio */}
-                                      <div className="flex flex-col justify-center">
-                                          <span className="text-[#007A33] font-black uppercase tracking-[0.3em] text-xs mb-2">{selectedCar.brand}</span>
-                                          <h1 className="text-4xl lg:text-5xl font-black uppercase tracking-tighter text-black mb-6 leading-tight">{selectedCar.model}</h1>
-                                          <p className="text-gray-600 leading-relaxed mb-8 text-md bg-gray-50 p-6 rounded-xl border-l-4 border-[#007A33] whitespace-pre-line">
-                                            {selectedCar.description || 'Nessuna descrizione fornita.'}
-                                          </p>
-                                          
-                                          <div className="text-4xl lg:text-5xl font-black text-black tracking-tighter mb-10 pb-8 border-b border-gray-100">
-                                              {selectedCar.status === 'Venduta' ? <span className="line-through text-gray-400">{selectedCar.price}</span> : selectedCar.price}
-                                          </div>
+                                    <div className="flex flex-col overflow-hidden w-full max-w-full">
+                                        <div className="flex gap-2 mb-4">
+                                            <span className="bg-orange-100 text-bongi-orange px-4 py-1 rounded-full text-[10px] font-black uppercase tracking-widest w-fit">{selectedCar.categoria}</span>
+                                            <span className={`px-4 py-1 rounded-full text-[10px] font-black uppercase tracking-widest w-fit ${selectedCar.condizione === 'Nuovo' ? 'bg-green-100 text-green-700' : selectedCar.condizione === 'Km 0' ? 'bg-blue-100 text-blue-700' : 'bg-slate-100 text-slate-700'}`}>
+                                                {selectedCar.condizione || 'Usato'}
+                                            </span>
+                                        </div>
+                                        <h1 className="text-5xl font-black uppercase italic tracking-tighter text-slate-900 leading-none mb-2 break-words font-montserrat">{selectedCar.marca}</h1>
+                                        <p className="text-2xl text-slate-500 font-bold uppercase mb-6 break-words">{selectedCar.modello}</p>
+                                        <div className="text-4xl font-black text-bongi-orange mb-8 italic font-montserrat">€ {Number(selectedCar.prezzo)?.toLocaleString('it-IT')}</div>
+                                        
+                                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
+                                            <div className="bg-white p-4 rounded-3xl border border-slate-100 shadow-sm flex flex-col items-center text-center">
+                                                <i data-lucide="calendar" className="w-5 h-5 text-bongi-orange mb-2"></i>
+                                                <p className="text-[9px] font-bold text-slate-400 uppercase font-montserrat">Anno</p>
+                                                <p className="font-black text-md text-slate-900">{selectedCar.anno}</p>
+                                            </div>
+                                            <div className="bg-white p-4 rounded-3xl border border-slate-100 shadow-sm flex flex-col items-center text-center">
+                                                <i data-lucide="gauge" className="w-5 h-5 text-bongi-orange mb-2"></i>
+                                                <p className="text-[9px] font-bold text-slate-400 uppercase font-montserrat">Km</p>
+                                                <p className="font-black text-md text-slate-900">{Number(selectedCar.km)?.toLocaleString('it-IT')}</p>
+                                            </div>
+                                            <div className="bg-white p-4 rounded-3xl border border-slate-100 shadow-sm flex flex-col items-center text-center">
+                                                <i data-lucide="fuel" className="w-5 h-5 text-bongi-orange mb-2"></i>
+                                                <p className="text-[9px] font-bold text-slate-400 uppercase font-montserrat">Alim.</p>
+                                                <p className="font-black text-md text-slate-900 truncate w-full">{selectedCar.alimentazione}</p>
+                                            </div>
+                                            <div className="bg-white p-4 rounded-3xl border border-slate-100 shadow-sm flex flex-col items-center text-center">
+                                                <i data-lucide="settings-2" className="w-5 h-5 text-bongi-orange mb-2"></i>
+                                                <p className="text-[9px] font-bold text-slate-400 uppercase font-montserrat">Cambio</p>
+                                                <p className="font-black text-md text-slate-900">{selectedCar.cambio || 'Manuale'}</p>
+                                            </div>
+                                        </div>
 
-                                          <div className="flex flex-col gap-4 mb-12">
-                                              {selectedCar.status === 'Venduta' ? (
-                                                  <div className="w-full bg-red-50 text-red-600 py-5 rounded-xl font-black uppercase tracking-widest text-[12px] flex justify-center items-center border border-red-200 shadow-sm">
-                                                      <i className="fa-solid fa-ban text-[18px] mr-3"></i> Veicolo non più disponibile
-                                                  </div>
-                                              ) : (
-                                                  <>
-                                                      <a 
-                                                        href={`tel:${CONFIG.telefono}`} 
-                                                        className="w-full bg-[#007A33] text-white py-5 rounded-xl font-black uppercase tracking-widest text-[12px] hover:bg-black transition-colors shadow-lg flex justify-center items-center gap-3"
-                                                      >
-                                                          <i className="fa-solid fa-phone text-[18px]"></i> Chiamaci per Info
-                                                      </a>
-                                                      <a 
-                                                        href={`https://api.whatsapp.com/send?phone=${CONFIG.telefono.replace('+', '')}&text=${whatsappMessage}`} 
-                                                        target="_blank" rel="noreferrer"
-                                                        className="w-full bg-[#25D366] text-white py-5 rounded-xl font-black uppercase tracking-widest text-[12px] hover:bg-[#20b858] transition-colors shadow-lg flex justify-center items-center gap-3"
-                                                      >
-                                                          <i className="fa-brands fa-whatsapp text-[20px]"></i> Scrivici su WhatsApp
-                                                      </a>
-                                                  </>
-                                              )}
-                                          </div>
-                                      </div>
-                                  </div>
+                                        <div className="space-y-4 w-full">
+                                            <a href={`https://wa.me/${CONFIG.whatsappNumber}?text=Buongiorno, vorrei informazioni sulla ${selectedCar.marca} ${selectedCar.modello} vista sul sito.`} target="_blank" className="w-full bg-[#25D366] hover:bg-[#1ebd57] text-white flex items-center justify-center gap-3 py-5 rounded-2xl font-black uppercase text-xs tracking-widest transition shadow-lg"><i data-lucide="message-circle" className="w-5 h-5"></i>WhatsApp</a>
+                                            <a href={`tel:${CONFIG.telefonoLink}`} className="w-full bg-slate-900 hover:bg-slate-800 text-white flex items-center justify-center gap-3 py-5 rounded-2xl font-black uppercase text-xs tracking-widest transition shadow-lg"><i data-lucide="phone" className="w-5 h-5"></i>Chiama Ora</a>
+                                        </div>
+                                    </div>
+                                </div>
 
-                                  {/* Scheda Tecnica */}
-                                  <div className="mt-16 bg-white rounded-2xl p-8 md:p-12 border-2 border-gray-100">
-                                      <div className="flex items-center gap-4 mb-10">
-                                          <div className="w-12 h-12 bg-gray-100 rounded-xl flex items-center justify-center text-[#007A33]">
-                                              <i className="fa-solid fa-list-check text-[20px]"></i>
-                                          </div>
-                                          <h2 className="text-3xl font-black uppercase text-black tracking-tighter">Scheda Tecnica</h2>
-                                      </div>
+                                <div className="grid lg:grid-cols-3 gap-12 border-t pt-16">
+                                    <div className="lg:col-span-2 overflow-hidden max-w-full">
+                                        <h3 className="text-2xl font-black uppercase italic mb-6 text-slate-900 font-montserrat">Descrizione <span className="text-bongi-orange">Completa</span></h3>
+                                        <div className="bg-white p-6 md:p-8 rounded-[2rem] border border-slate-100 shadow-sm">
+                                            <p className="text-slate-600 leading-relaxed whitespace-pre-line text-sm md:text-base break-words">
+                                                {selectedCar.descrizione || "Nessuna descrizione dettagliata fornita per questo veicolo."}
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div className="space-y-8 w-full max-w-full">
+                                        <h3 className="text-2xl font-black uppercase italic mb-6 text-slate-900 font-montserrat">Scheda <span className="text-bongi-orange">Tecnica</span></h3>
+                                        <div className="bg-slate-900 text-white p-6 md:p-8 rounded-[2rem] shadow-xl w-full">
+                                            <ul className="space-y-5 text-xs md:text-sm uppercase font-bold tracking-wider">
+                                                <li className="flex justify-between border-b border-white/10 pb-2">
+                                                    <span className="text-slate-400">Stato</span>
+                                                    <span className="text-right ml-2">{selectedCar.condizione || 'Usato'}</span>
+                                                </li>
+                                                <li className="flex justify-between border-b border-white/10 pb-2">
+                                                    <span className="text-slate-400">Marca</span>
+                                                    <span className="text-right ml-2">{selectedCar.marca}</span>
+                                                </li>
+                                                <li className="flex justify-between border-b border-white/10 pb-2">
+                                                    <span className="text-slate-400">Modello</span>
+                                                    <span className="text-right ml-2">{selectedCar.modello}</span>
+                                                </li>
+                                                <li className="flex justify-between border-b border-white/10 pb-2">
+                                                    <span className="text-slate-400">Anno</span>
+                                                    <span className="text-right ml-2">{selectedCar.anno}</span>
+                                                </li>
+                                                <li className="flex justify-between border-b border-white/10 pb-2">
+                                                    <span className="text-slate-400">Chilometri</span>
+                                                    <span className="text-right ml-2">{Number(selectedCar.km)?.toLocaleString('it-IT')} km</span>
+                                                </li>
+                                                <li className="flex justify-between border-b border-white/10 pb-2">
+                                                    <span className="text-slate-400">Alimentazione</span>
+                                                    <span className="text-right ml-2">{selectedCar.alimentazione}</span>
+                                                </li>
+                                                <li className="flex justify-between border-b border-white/10 pb-2">
+                                                    <span className="text-slate-400">Cambio</span>
+                                                    <span className="text-right ml-2">{selectedCar.cambio || "Manuale"}</span>
+                                                </li>
+                                                <li className="flex justify-between border-b border-white/10 pb-2">
+                                                    <span className="text-slate-400">Potenza</span>
+                                                    <span className="text-right ml-2">{selectedCar.potenza ? `${selectedCar.potenza} CV` : "N/D"}</span>
+                                                </li>
+                                                <li className="flex justify-between border-b border-white/10 pb-2">
+                                                    <span className="text-slate-400">Cilindrata</span>
+                                                    <span className="text-right ml-2">{selectedCar.cilindrata ? `${selectedCar.cilindrata} cc` : "N/D"}</span>
+                                                </li>
+                                                <li className="flex justify-between border-b border-white/10 pb-2">
+                                                    <span className="text-slate-400">Colore</span>
+                                                    <span className="text-right ml-2">{selectedCar.colore || "N/D"}</span>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
 
-                                      <div className="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-6">
-                                          {[
-                                              { label: "Categoria", value: selectedCar.category || '-' },
-                                              { label: "Marca", value: selectedCar.brand || '-' },
-                                              { label: "Modello", value: selectedCar.model || '-' },
-                                              { label: "Anno", value: selectedCar.year || '-' },
-                                              { label: "Chilometri", value: selectedCar.mileage || '-' },
-                                              { label: "Alimentazione", value: selectedCar.fuel || '-' },
-                                              { label: "Cambio", value: selectedCar.transmission || '-' },
-                                              { label: "Potenza", value: selectedCar.power || '-' },
-                                              { label: "Cilindrata", value: selectedCar.displacement || '-' },
-                                              { label: "Colore", value: selectedCar.color || '-' }
-                                          ].map((spec, i) => (
-                                              <div key={i} className="flex justify-between items-center py-4 border-b border-gray-100">
-                                                  <span className="text-gray-500 font-bold uppercase text-[10px] tracking-widest">{spec.label}</span>
-                                                  <span className="text-black font-black uppercase text-xs">{spec.value}</span>
-                                              </div>
-                                          ))}
-                                      </div>
-                                  </div>
-                              </div>
-                          </div>
-                      </section>
-                  )}
+                        {/* SEZIONE CONTATTI */}
+                        {currentPage === 'contatti' && (
+                            <div className="py-24 px-6 max-w-5xl mx-auto animate-in fade-in duration-700">
+                                <h2 className="text-5xl font-black uppercase italic mb-16 text-center font-montserrat text-slate-900">Contattaci</h2>
+                                <div className="grid md:grid-cols-2 gap-16 items-start">
+                                    <div className="space-y-10">
+                                        <div className="flex gap-6 items-start">
+                                            <div className="bg-slate-100 p-5 rounded-[2rem] text-slate-800 shadow-sm"><i data-lucide="map-pin" className="w-8 h-8"></i></div>
+                                            <div>
+                                                <h4 className="font-black uppercase text-xs tracking-widest text-slate-400 mb-2 font-montserrat">Sede Principale</h4>
+                                                <p className="text-xl font-bold text-slate-900 leading-tight">{CONFIG.indirizzo}<br/>{CONFIG.cap} {CONFIG.citta} ({CONFIG.provinciaBreve})</p>
+                                            </div>
+                                        </div>
+                                        <div className="flex gap-6 items-start">
+                                            <div className="bg-slate-100 p-5 rounded-[2rem] text-slate-800 shadow-sm"><i data-lucide="mail" className="w-8 h-8"></i></div>
+                                            <div>
+                                                <h4 className="font-black uppercase text-xs tracking-widest text-slate-400 mb-2 font-montserrat">Email Ufficiale</h4>
+                                                <p className="text-xl font-bold text-slate-900 break-all">{CONFIG.email}</p>
+                                            </div>
+                                        </div>
+                                        <div className="flex gap-6 items-start">
+                                            <div className="bg-slate-100 p-5 rounded-[2rem] text-slate-800 shadow-sm"><i data-lucide="phone" className="w-8 h-8"></i></div>
+                                            <div>
+                                                <h4 className="font-black uppercase text-xs tracking-widest text-slate-400 mb-2 font-montserrat">Linea Diretta</h4>
+                                                {CONFIG.telefoni.map((tel, idx) => (
+                                                    <p key={idx} className="text-2xl font-heading font-black text-bongi-orange mb-1">{tel.numero} <span className="text-sm font-medium text-slate-500">({tel.nome})</span></p>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="bg-[#0F172A] text-white p-8 md:p-12 rounded-[3rem] shadow-2xl border-t-8 border-bongi-orange flex flex-col items-center text-center justify-center min-h-[300px] relative overflow-hidden">
+                                        <div className="absolute -top-10 -right-10 opacity-5"><i data-lucide="smartphone" className="w-64 h-64"></i></div>
+                                        <h3 className="text-3xl font-black uppercase italic mb-8 tracking-tighter font-montserrat relative z-10">Social Network</h3>
+                                        <div className="flex flex-col gap-4 w-full relative z-10">
+                                            {CONFIG.social.instagram && (
+                                                <a href={CONFIG.social.instagram} target="_blank" className="bg-white/10 hover:bg-white/20 text-white py-4 rounded-2xl font-bold uppercase text-xs tracking-widest flex items-center justify-center gap-4 transition-all transform hover:-translate-y-1 border border-white/5 backdrop-blur-sm">
+                                                    <img src={IG_ICON} className="w-6 h-6 rounded-md object-contain" alt="Instagram" /> Instagram
+                                                </a>
+                                            )}
+                                            {CONFIG.social.facebook && (
+                                                <a href={CONFIG.social.facebook} target="_blank" className="bg-white/10 hover:bg-white/20 text-white py-4 rounded-2xl font-bold uppercase text-xs tracking-widest flex items-center justify-center gap-4 transition-all transform hover:-translate-y-1 border border-white/5 backdrop-blur-sm">
+                                                    <img src={FB_ICON} className="w-6 h-6 rounded-md object-contain" alt="Facebook" /> Facebook
+                                                </a>
+                                            )}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
 
-                  {/* VENDI VEICOLO */}
-                  {currentPage === 'vendi' && (
-                      <div className="py-24 px-6 max-w-5xl mx-auto animate-in fade-in duration-700">
-                          <h2 className="text-5xl font-black uppercase mb-4 text-center text-black">Vendi il tuo <span className="text-[#007A33]">Veicolo</span></h2>
-                          <div className="flex items-center justify-center gap-4 mb-6">
-                                  <div className="h-[2px] w-12 bg-[#007A33]"></div>
-                                  <i className="fa-solid fa-file-signature text-[20px] text-[#007A33]"></i>
-                                  <div className="h-[2px] w-12 bg-[#007A33]"></div>
-                          </div>
-                          <p className="text-center text-slate-500 font-medium mb-12 text-sm max-w-2xl mx-auto">
-                              Affidati alla nostra concessionaria per vendere la tua auto o moto. Compila il modulo per una valutazione professionale, ci occuperemo noi di tutto l'iter burocratico e della ricerca dell'acquirente.
-                          </p>
-                          <div className="bg-white p-4 md:p-8 rounded-[2rem] shadow-xl border border-slate-200 flex justify-center w-full h-[900px]">
-                              <iframe 
-                                  src={CONFIG.linkGoogleFormValutazione} 
-                                  width="100%" 
-                                  height="100%" 
-                                  frameBorder="0" 
-                                  marginHeight="0" 
-                                  marginWidth="0"
-                                  className="rounded-xl"
-                              >Caricamento in corso…</iframe>
-                          </div>
-                      </div>
-                  )}
+                        {/* SEZIONE VENDI */}
+                        {currentPage === 'vendi' && (
+                            <div className="py-24 px-6 max-w-5xl mx-auto animate-in fade-in duration-700">
+                                <h2 className="text-5xl font-black uppercase italic mb-8 text-center font-montserrat text-slate-900">Vendi il tuo <span className="text-bongi-orange">Veicolo</span></h2>
+                                <p className="text-center text-slate-500 font-medium mb-12 text-sm max-w-2xl mx-auto">Compila il modulo sottostante con i dati del tuo veicolo per ricevere una valutazione gratuita e senza impegno dal nostro team di esperti.</p>
+                                <div className="bg-white p-2 md:p-6 rounded-[2rem] shadow-xl border border-slate-100 flex justify-center w-full h-[900px] overflow-hidden">
+                                    <iframe 
+                                        src={CONFIG.linkGoogleFormValutazione} 
+                                        width="100%" 
+                                        height="100%" 
+                                        frameBorder="0" 
+                                        marginHeight="0" 
+                                        marginWidth="0"
+                                        className="rounded-xl w-full h-full"
+                                    >Caricamento in corso…</iframe>
+                                </div>
+                            </div>
+                        )}
 
-                  {/* CHI SIAMO / LA STORIA */}
-                  {currentPage === 'chi-siamo' && (
-                      <section className="bg-white animate-in fade-in duration-700">
-                          <div className="bg-black py-24 px-6 text-center relative overflow-hidden border-b-4 border-[#007A33]">
-                              <div className="absolute inset-0 opacity-40" style={{ backgroundImage: 'url("https://images.unsplash.com/photo-1486262715619-6708146bc9c5?auto=format&fit=crop&q=80&w=2000")', backgroundSize: 'cover', backgroundPosition: 'center' }}></div>
-                              <div className="relative z-10 max-w-4xl mx-auto">
-                                  <h1 className="text-5xl lg:text-7xl font-black uppercase tracking-tighter text-[#007A33] mb-6 drop-shadow-lg">La Nostra Storia</h1>
-                                  <div className="flex items-center justify-center gap-4 mb-8">
-                                      <div className="h-[2px] w-16 bg-white/30"></div>
-                                      <i className="fa-solid fa-flag-checkered text-[24px] text-white"></i>
-                                      <div className="h-[2px] w-16 bg-white/30"></div>
-                                  </div>
-                                  <p className="text-white/90 text-xl font-medium italic">"Dal mondo delle moto alle auto e al settore edile. Una passione in costante crescita."</p>
-                              </div>
-                          </div>
+                        {/* SEZIONE CHI SIAMO */}
+                        {currentPage === 'chisiamo' && (
+                            <div className="py-24 px-6 max-w-7xl mx-auto animate-in fade-in duration-700">
+                                <div className="text-center mb-16">
+                                    <h2 className="text-5xl md:text-6xl font-black uppercase italic tracking-tighter text-slate-900 mb-6 font-montserrat">Chi <span className="text-bongi-orange">Siamo</span></h2>
+                                    <p className="text-xl text-slate-500 font-medium max-w-3xl mx-auto">La passione per i motori al tuo servizio. Scopri la storia di {CONFIG.nomeConcessionaria} e il nostro impegno per garantirti sempre il meglio.</p>
+                                </div>
 
-                          <div className="py-24 container mx-auto px-6 lg:px-20 max-w-[1200px]">
-                              <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-                                  <div className="relative">
-                                      <div className="absolute -top-6 -left-6 w-32 h-32 bg-[#007A33]/10 rounded-full -z-10"></div>
-                                      <img 
-                                          src="https://images.unsplash.com/photo-1580273916550-e323be2ae537?auto=format&fit=crop&q=80&w=1000" 
-                                          className="rounded-3xl shadow-2xl border-4 border-gray-100 relative z-10 grayscale hover:grayscale-0 transition-all duration-700"
-                                          alt="Passione motori"
-                                      />
-                                      <div className="absolute -bottom-6 -right-6 bg-white border-2 border-[#007A33] text-black p-6 rounded-2xl shadow-xl hidden md:block z-20">
-                                          <div className="text-3xl font-black text-[#007A33]"><i className="fa-solid fa-award"></i></div>
-                                          <div className="text-[12px] font-black uppercase tracking-widest mt-2">Dal 2017<br/>nel settore</div>
-                                      </div>
-                                  </div>
-                                  <div className="flex flex-col gap-6">
-                                      <span className="text-[#007A33] font-black uppercase tracking-[0.2em] text-xs">Filippo Bongi</span>
-                                      <h2 className="text-4xl font-black uppercase text-black tracking-tighter">La passione che guida ogni nostro progetto</h2>
-                                      
-                                      <div className="space-y-4 text-gray-600 leading-relaxed text-sm">
-                                          <p>
-                                              Tutto è iniziato nel <strong>2017</strong>, spinto da una profonda e radicata passione per il mondo delle due ruote. Inizialmente concentrato sulle moto, il commercio e le continue opportunità mi hanno permesso di espandere i miei orizzonti portandomi, quasi naturalmente, alla vendita di auto.
-                                          </p>
-                                          <p>
-                                              La voglia di crescere non si è mai fermata. Negli anni ho deciso di mettere in parallelo alla concessionaria anche il <strong>settore edile</strong>, di cui mi occupo direttamente. Questa sinergia mi ha spinto a trattare e curare anche mezzi specifici, come quelli per il <strong>movimento terra</strong>, offrendo un servizio completo per chi cerca mezzi da lavoro.
-                                          </p>
-                                          <p>
-                                              Oggi <strong>Bongi Sport Car</strong> è la tua concessionaria di fiducia: che si tratti di un veicolo Usato, del fascino del Nuovo o del vantaggio del Km0, il nostro obiettivo è garantire professionalità e i mezzi giusti per ogni tua esigenza, stradale o lavorativa.
-                                          </p>
-                                      </div>
-                                      
-                                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
-                                          <div className="p-4 bg-gray-50 rounded-xl border border-gray-100 text-center">
-                                              <i className="fa-solid fa-motorcycle text-[#007A33] mb-3 text-[24px]"></i>
-                                              <h4 className="font-bold text-black uppercase text-[11px] tracking-widest">Auto e Moto</h4>
-                                          </div>
-                                          <div className="p-4 bg-gray-50 rounded-xl border border-gray-100 text-center">
-                                              <i className="fa-solid fa-tags text-[#007A33] mb-3 text-[24px]"></i>
-                                              <h4 className="font-bold text-black uppercase text-[11px] tracking-widest">Nuovo e Usato</h4>
-                                          </div>
-                                          <div className="p-4 bg-gray-50 rounded-xl border border-gray-100 text-center">
-                                              <i className="fa-solid fa-truck-moving text-[#007A33] mb-3 text-[24px]"></i>
-                                              <h4 className="font-bold text-black uppercase text-[11px] tracking-widest">Movimento Terra</h4>
-                                          </div>
-                                      </div>
-                                  </div>
-                              </div>
-                          </div>
-                      </section>
-                  )}
+                                <div className="grid lg:grid-cols-2 gap-16 items-center mb-24">
+                                    <div className="space-y-6">
+                                        <h3 className="text-3xl font-black uppercase italic text-slate-900 font-montserrat">{CONFIG.chiSiamo.titoloOrigini}</h3>
+                                        <p className="text-slate-600 leading-relaxed text-lg" dangerouslySetInnerHTML={{__html: CONFIG.chiSiamo.paragrafo1}}></p>
+                                        <p className="text-slate-600 leading-relaxed text-lg" dangerouslySetInnerHTML={{__html: CONFIG.chiSiamo.paragrafo2}}></p>
+                                    </div>
+                                    <div className="bg-[#0F172A] rounded-[3rem] p-8 md:p-12 shadow-2xl text-white relative overflow-hidden">
+                                        <div className="absolute top-0 right-0 p-8 opacity-10"><i data-lucide="quote" className="w-24 h-24 text-bongi-orange"></i></div>
+                                        <div className="relative z-10">
+                                            <i data-lucide="car" className="w-12 h-12 text-white mb-6"></i>
+                                            <p className="text-xl md:text-2xl font-light italic leading-relaxed mb-8">
+                                                "{CONFIG.chiSiamo.citazione}"
+                                            </p>
+                                            <div className="flex items-center gap-4">
+                                                <div className="w-12 h-12 bg-bongi-orange text-white rounded-full flex items-center justify-center font-black text-xl font-montserrat">{CONFIG.chiSiamo.inizialeFondatore}</div>
+                                                <div>
+                                                    <p className="font-bold uppercase tracking-widest text-xs font-montserrat">{CONFIG.chiSiamo.nomeFondatore}</p>
+                                                    <p className="text-slate-400 text-[10px] uppercase tracking-widest">{CONFIG.chiSiamo.ruoloFondatore}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
 
-                  {/* CONTATTI */}
-                  {['Contatti'].includes(currentPage) && (
-                      <section className="bg-gray-50 py-24 animate-in fade-in duration-700">
-                          <div className="max-w-[1200px] mx-auto px-6">
-                              <div className="text-center mb-16">
-                                  <span className="text-[#007A33] font-black uppercase tracking-[0.2em] text-xs">Siamo a tua disposizione</span>
-                                  <h1 className="text-5xl lg:text-6xl font-black uppercase tracking-tighter text-black mt-2 mb-6">Contattaci</h1>
-                                  <div className="flex items-center justify-center gap-4">
-                                      <div className="h-[2px] w-12 bg-[#007A33]"></div>
-                                      <i className="fa-solid fa-map-location-dot text-gray-400 text-[20px]"></i>
-                                      <div className="h-[2px] w-12 bg-[#007A33]"></div>
-                                  </div>
-                              </div>
+                                <div className="grid md:grid-cols-3 gap-8">
+                                    <div className="bg-white p-8 rounded-[2rem] shadow-sm border border-slate-100 hover:shadow-xl transition duration-300">
+                                        <div className="w-14 h-14 bg-orange-50 text-bongi-orange rounded-2xl flex items-center justify-center mb-6"><i data-lucide="search-check" className="w-6 h-6"></i></div>
+                                        <h4 className="text-xl font-black uppercase italic mb-3 font-montserrat">Selezione Rigorosa</h4>
+                                        <p className="text-slate-500 leading-relaxed text-sm">Ogni veicolo proposto viene sottoposto a minuziosi controlli dai nostri esperti, per assicurarti un acquisto sereno e assolutamente senza sorprese.</p>
+                                    </div>
+                                    <div className="bg-white p-8 rounded-[2rem] shadow-sm border border-slate-100 hover:shadow-xl transition duration-300">
+                                        <div className="w-14 h-14 bg-orange-50 text-bongi-orange rounded-2xl flex items-center justify-center mb-6"><i data-lucide="handshake" className="w-6 h-6"></i></div>
+                                        <h4 className="text-xl font-black uppercase italic mb-3 font-montserrat">Trasparenza</h4>
+                                        <p className="text-slate-500 leading-relaxed text-sm">Crediamo in un rapporto di onestà e fiducia. Nessun costo nascosto o dettaglio omesso: ti forniamo tutta la verità sul veicolo.</p>
+                                    </div>
+                                    <div className="bg-white p-8 rounded-[2rem] shadow-sm border border-slate-100 hover:shadow-xl transition duration-300">
+                                        <div className="w-14 h-14 bg-orange-50 text-bongi-orange rounded-2xl flex items-center justify-center mb-6"><i data-lucide="shield-alert" className="w-6 h-6"></i></div>
+                                        <h4 className="text-xl font-black uppercase italic mb-3 font-montserrat">Ampia Scelta</h4>
+                                        <p className="text-slate-500 leading-relaxed text-sm">Dalle due ruote, alle quattro ruote, fino ai mezzi da cantiere. Troviamo sempre la soluzione adatta alle tue esigenze lavorative o private.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+                    </main>
 
-                              <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-                                  <div className="flex flex-col gap-6">
-                                      
-                                      <div className="bg-white rounded-2xl p-6 border border-gray-200 flex items-start gap-6 shadow-sm hover:shadow-md transition-shadow">
-                                          <div className="w-14 h-14 bg-gray-50 text-[#007A33] rounded-xl flex items-center justify-center shrink-0 border border-gray-100">
-                                              <i className="fa-solid fa-location-dot text-[24px]"></i>
-                                          </div>
-                                          <div>
-                                              <h3 className="text-lg font-black uppercase text-black tracking-tighter mb-2">La Nostra Sede</h3>
-                                              <p className="text-gray-500 text-sm mb-2">Vieni a trovarci presso il nostro showroom.</p>
-                                              <span className="text-black font-bold text-sm">{CONFIG.indirizzo}</span>
-                                          </div>
-                                      </div>
-
-                                      <div className="bg-white rounded-2xl p-6 border border-gray-200 flex items-start gap-6 shadow-sm hover:shadow-md transition-shadow">
-                                          <div className="w-14 h-14 bg-gray-50 text-[#007A33] rounded-xl flex items-center justify-center shrink-0 border border-gray-100">
-                                              <i className="fa-solid fa-phone text-[24px]"></i>
-                                          </div>
-                                          <div>
-                                              <h3 className="text-lg font-black uppercase text-black tracking-tighter mb-2">Recapito Telefonico</h3>
-                                              <p className="text-gray-500 text-sm mb-2">Chiamaci per informazioni sull'acquisto o la vendita.</p>
-                                              <a href={`tel:${CONFIG.telefono}`} className="text-[#007A33] font-black text-xl hover:text-black transition-colors">
-                                                  {CONFIG.telefonoDisplay}
-                                              </a>
-                                          </div>
-                                      </div>
-
-                                      <div className="bg-white rounded-2xl p-6 border border-gray-200 flex items-start gap-6 shadow-sm hover:shadow-md transition-shadow">
-                                          <div className="w-14 h-14 bg-gray-50 text-[#007A33] rounded-xl flex items-center justify-center shrink-0 border border-gray-100">
-                                              <i className="fa-solid fa-envelope text-[24px]"></i>
-                                          </div>
-                                          <div>
-                                              <h3 className="text-lg font-black uppercase text-black tracking-tighter mb-2">Scrivici un'Email</h3>
-                                              <p className="text-gray-500 text-sm mb-2">Per richieste, preventivi o collaborazioni.</p>
-                                              <a href={`mailto:${CONFIG.email}`} className="text-[#007A33] font-bold text-sm hover:text-black transition-colors">
-                                                  {CONFIG.email}
-                                              </a>
-                                          </div>
-                                      </div>
-
-                                      <div className="bg-white rounded-2xl p-6 border border-gray-200 flex items-start gap-6 shadow-sm hover:shadow-md transition-shadow">
-                                          <div className="w-14 h-14 bg-gray-50 text-[#007A33] rounded-xl flex items-center justify-center shrink-0 border border-gray-100">
-                                              <i className="fa-solid fa-hashtag text-[24px]"></i>
-                                          </div>
-                                          <div>
-                                              <h3 className="text-lg font-black uppercase text-black tracking-tighter mb-2">Seguici sui Social</h3>
-                                              <p className="text-gray-500 text-sm mb-3">Rimani aggiornato sui nuovi veicoli disponibili.</p>
-                                              <div className="flex gap-4">
-                                                  <a href={CONFIG.facebook} target="_blank" rel="noreferrer" className="flex items-center gap-2 bg-[#1877F2] text-white px-4 py-2 rounded-lg text-xs font-bold hover:bg-black transition-colors">
-                                                      <i className="fa-brands fa-facebook"></i> Facebook
-                                                  </a>
-                                                  <a href={CONFIG.instagram} target="_blank" rel="noreferrer" className="flex items-center gap-2 bg-gradient-to-r from-[#833AB4] via-[#FD1D1D] to-[#F56040] text-white px-4 py-2 rounded-lg text-xs font-bold hover:opacity-80 transition-opacity">
-                                                      <i className="fa-brands fa-instagram"></i> Instagram
-                                                  </a>
-                                              </div>
-                                          </div>
-                                      </div>
-                                  </div>
-
-                                  <div className="flex flex-col h-full">
-                                      <div className="bg-[#007A33] text-white rounded-3xl p-10 shadow-xl h-full flex flex-col justify-center relative overflow-hidden">
-                                          <div className="absolute -top-10 -right-10 w-40 h-40 bg-white/10 rounded-full blur-2xl"></div>
-                                          <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-black/20 rounded-full blur-2xl"></div>
-                                          
-                                          <div className="relative z-10">
-                                              <h3 className="text-3xl font-black uppercase text-white tracking-tighter mb-8 flex items-center gap-3">
-                                                  <i className="fa-regular fa-calendar-check text-[28px]"></i> Prenota un incontro
-                                              </h3>
-                                              
-                                              <p className="text-white/90 leading-relaxed mb-8">
-                                                  Siamo a tua completa disposizione per mostrarti il nostro parco auto, moto e i mezzi da lavoro. Chiamaci o scrivici per fissare un incontro presso la nostra sede di Alcamo.
-                                              </p>
-                                              
-                                              <a 
-                                                href={`https://api.whatsapp.com/send?phone=${CONFIG.telefono.replace('+', '')}&text=Salve Filippo, vorrei fissare un appuntamento in concessionaria.`} 
-                                                target="_blank" rel="noreferrer"
-                                                className="inline-flex bg-white text-[#007A33] px-8 py-4 rounded-xl font-black uppercase tracking-widest text-xs hover:bg-black hover:text-white transition-colors shadow-lg items-center gap-3"
-                                              >
-                                                  <i className="fa-brands fa-whatsapp text-[18px]"></i> Scrivici su WhatsApp
-                                              </a>
-                                          </div>
-                                      </div>
-                                  </div>
-                              </div>
-                          </div>
-                      </section>
-                  )}
-              </main>
-
-              {/* FOOTER */}
-              <footer className="bg-black text-white pt-20 pb-10 mt-auto border-t-8 border-[#007A33]">
-                <div className="max-w-[1400px] mx-auto px-10">
-                  <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16 border-b border-white/10 pb-16">
-                    <div className="col-span-1 md:col-span-2 pr-8">
-                      {/* LOGO FOOTER AGGIORNATO (senza sfondo bianco e più grande) */}
-                      <div className="flex items-center mb-6 cursor-pointer w-max" onClick={() => navigate('Home')}>
-                          <img src="Logo.png" alt="Bongi Sport Car" className="h-[90px] w-auto object-contain rounded-2xl" />
-                      </div>
-                      <p className="text-gray-400 text-sm leading-relaxed mb-6">Concessionario Auto e Moto. Esperti nel settore Nuovo, Usato e Km0 con anni di esperienza anche nel settore edile e del movimento terra.</p>
-                      
-                      <div className="flex gap-3">
-                          <a href={CONFIG.facebook} target="_blank" rel="noreferrer" className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-[#007A33] transition-colors">
-                              <i className="fa-brands fa-facebook-f text-white"></i>
-                          </a>
-                          <a href={CONFIG.instagram} target="_blank" rel="noreferrer" className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-[#007A33] transition-colors">
-                              <i className="fa-brands fa-instagram text-white"></i>
-                          </a>
-                      </div>
-                    </div>
-                    <div>
-                      <h4 className="text-[#007A33] font-black uppercase text-sm tracking-widest mb-6">Navigazione</h4>
-                      <ul className="flex flex-col gap-3 text-gray-400 text-xs font-bold">
-                        {menuItems.map(item => (
-                            <li key={item.label} onClick={() => navigate(item.id)} className="hover:text-white cursor-pointer uppercase tracking-widest transition-colors">{item.label}</li>
-                        ))}
-                      </ul>
-                    </div>
-                    <div>
-                      <h4 className="text-[#007A33] font-black uppercase text-sm tracking-widest mb-6">Recapiti</h4>
-                      <div className="flex flex-col gap-4 text-gray-400 text-xs">
-                          <p className="flex items-start gap-3">
-                              <i className="fa-solid fa-location-dot mt-1 text-[#007A33]"></i>
-                              <span>{CONFIG.indirizzo}</span>
-                          </p>
-                          <p className="flex items-center gap-3">
-                              <i className="fa-solid fa-phone text-[#007A33]"></i>
-                              <span className="font-bold text-white">{CONFIG.telefonoDisplay}</span>
-                          </p>
-                          <p className="flex items-center gap-3">
-                              <i className="fa-solid fa-envelope text-[#007A33]"></i>
-                              <span>{CONFIG.email}</span>
-                          </p>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-gray-500 text-[10px] font-bold uppercase tracking-[0.1em]">
-                      <span>© {new Date().getFullYear()} Bongi Sport Car di Filippo Bongi. Tutti i diritti riservati.</span>
-                      <span>Realizzato con Passione</span>
-                  </div>
+                    {/* FOOTER */}
+                    <footer className="bg-[#0F172A] text-white py-16 px-6 mt-auto border-t-[6px] border-bongi-orange">
+                        <div className="max-w-7xl mx-auto grid md:grid-cols-3 gap-12 border-b border-white/10 pb-12 mb-8">
+                            <div>
+                                {CONFIG.logoUrl ? (
+                                    <img src={CONFIG.logoUrl} alt={CONFIG.nomeConcessionaria} className="h-20 w-auto object-contain mb-6 drop-shadow-lg rounded-xl" />
+                                ) : (
+                                    <h4 className="font-heading font-black uppercase italic text-2xl mb-4 text-bongi-orange">{CONFIG.nomeConcessionaria}</h4>
+                                )}
+                                <p className="text-slate-400 text-sm leading-relaxed mb-6 italic">{CONFIG.descrizioneFooter}</p>
+                                <div className="flex gap-4">
+                                    {CONFIG.social.instagram && (
+                                        <a href={CONFIG.social.instagram} target="_blank" className="hover:scale-110 transition-transform bg-white/5 p-2 rounded-xl border border-white/10 hover:border-bongi-orange">
+                                            <img src={IG_ICON} className="w-6 h-6 rounded object-contain" alt="Instagram" />
+                                        </a>
+                                    )}
+                                    {CONFIG.social.facebook && (
+                                        <a href={CONFIG.social.facebook} target="_blank" className="hover:scale-110 transition-transform bg-white/5 p-2 rounded-xl border border-white/10 hover:border-[#3b5998]">
+                                            <img src={FB_ICON} className="w-6 h-6 rounded object-contain" alt="Facebook" />
+                                        </a>
+                                    )}
+                                </div>
+                            </div>
+                            <div className="space-y-6">
+                                <h5 className="font-heading font-black uppercase text-sm tracking-widest text-white">Contatti Rapidi</h5>
+                                <div className="flex flex-col gap-5">
+                                    {CONFIG.telefoni.map((tel, idx) => (
+                                        <a key={idx} href={`tel:${tel.link}`} className="text-slate-300 font-bold hover:text-white transition flex items-center gap-4 group">
+                                            <div className="bg-white/5 p-3 rounded-xl group-hover:bg-bongi-orange transition"><i data-lucide="phone" className="w-5 h-5"></i></div> 
+                                            {tel.numero} <span className="font-normal opacity-70">({tel.nome})</span>
+                                        </a>
+                                    ))}
+                                    <a href={`mailto:${CONFIG.email}`} className="text-slate-300 font-bold hover:text-white transition flex items-center gap-4 group break-all">
+                                        <div className="bg-white/5 p-3 rounded-xl group-hover:bg-bongi-orange group-hover:text-white transition"><i data-lucide="mail" className="w-5 h-5"></i></div> 
+                                        {CONFIG.email}
+                                    </a>
+                                </div>
+                            </div>
+                            <div className="space-y-6">
+                                <h5 className="font-heading font-black uppercase text-sm tracking-widest text-white">Sede Operativa</h5>
+                                <div className="text-slate-300 font-bold flex items-start gap-4">
+                                    <div className="bg-white/5 p-3 rounded-xl text-bongi-orange mt-1"><i data-lucide="map-pin" className="w-5 h-5"></i></div>
+                                    <span className="leading-relaxed">{CONFIG.indirizzo}<br/><span className="text-slate-500 font-normal">{CONFIG.cap} {CONFIG.citta} ({CONFIG.provinciaBreve})</span></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4 text-[10px] font-bold uppercase tracking-widest opacity-40 italic">
+                            <span>&copy; {new Date().getFullYear()} {CONFIG.nomeConcessionaria} di Filippo Bongi.</span>
+                            <span>{CONFIG.provinciaEstesa}</span>
+                        </div>
+                    </footer>
                 </div>
-              </footer>
-            </div>
-          );
-        }
+            );
+        };
 
         const root = ReactDOM.createRoot(document.getElementById('root'));
         root.render(<App />);
